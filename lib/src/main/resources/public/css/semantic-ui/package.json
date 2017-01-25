@@ -1,0 +1,84 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "semantic-ui-css@2.2.4",
+        "scope": null,
+        "escapedName": "semantic-ui-css",
+        "name": "semantic-ui-css",
+        "rawSpec": "2.2.4",
+        "spec": "2.2.4",
+        "type": "version"
+      },
+      "/root/okta/samples-js-angular-1"
+    ]
+  ],
+  "_from": "semantic-ui-css@2.2.4",
+  "_id": "semantic-ui-css@2.2.4",
+  "_inCache": true,
+  "_location": "/semantic-ui-css",
+  "_nodeVersion": "5.7.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/semantic-ui-css-2.2.4.tgz_1472444115826_0.24543065414763987"
+  },
+  "_npmUser": {
+    "name": "semantic-bot",
+    "email": "bot@semantic-ui.com"
+  },
+  "_npmVersion": "3.7.5",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "semantic-ui-css@2.2.4",
+    "scope": null,
+    "escapedName": "semantic-ui-css",
+    "name": "semantic-ui-css",
+    "rawSpec": "2.2.4",
+    "spec": "2.2.4",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://artifacts.aue1d.saasure.com:443/artifactory/api/npm/npm-okta-master/semantic-ui-css/-/semantic-ui-css-2.2.4.tgz",
+  "_shasum": "e886e6e55e2a16874bd5de49c25f26cd2eb720b7",
+  "_shrinkwrap": null,
+  "_spec": "semantic-ui-css@2.2.4",
+  "_where": "/root/okta/samples-js-angular-1",
+  "author": {
+    "name": "Jack Lukic",
+    "email": "jack@semantic-ui.com"
+  },
+  "bugs": {
+    "url": "https://github.com/Semantic-Org/Semantic-UI/issues"
+  },
+  "dependencies": {
+    "jquery": "x.*"
+  },
+  "description": "CSS Only distribution of Semantic UI",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "tarball": "https://artifacts.aue1d.saasure.com:443/artifactory/api/npm/npm-okta-master/semantic-ui-css/-/semantic-ui-css-2.2.4.tgz",
+    "shasum": "e886e6e55e2a16874bd5de49c25f26cd2eb720b7"
+  },
+  "gitHead": "67f91900c54d479db61c162567821d2e984752f9",
+  "homepage": "http://www.semantic-ui.com",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "semantic-bot",
+      "email": "bot@semantic-ui.com"
+    }
+  ],
+  "name": "semantic-ui-css",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Semantic-Org/Semantic-UI-CSS.git"
+  },
+  "scripts": {},
+  "title": "Semantic UI",
+  "version": "2.2.4"
+}

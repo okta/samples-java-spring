@@ -1,0 +1,9 @@
+{
+  "@okta/generator-samples": {
+    "type": "end-to-end",
+    "environment": "Java",
+    "framework": "Spring-Boot",
+    "name": "samples-java-spring-boot",
+    "version": "1.7.0"
+  }
+}
