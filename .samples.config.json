@@ -6,10 +6,10 @@
     "redirectUri": "http://localhost:3000/authorization-code/callback"
   },
   "server": {
-    "staticDir": "dist",
-    "startSignal": "bundle is now VALID",
+    "staticDir": "lib/src/main/resources/public",
+    "startSignal": "Server Started",
     "port": 3000,
-    "framework": "Spring MVC",
+    "framework": "Spring-Boot",
     "environment": "Java"
   },
   "mockOkta": {

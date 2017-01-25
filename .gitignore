@@ -5,3 +5,15 @@ npm-debug.log
 travis_phantomjs
 .DS_Store
 .vscode
+public/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+.classpath
+.project
+.settings/
+target/

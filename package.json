@@ -1,16 +1,16 @@
 {
-  "name": "@okta/samples-java-spring-mvc",
+  "name": "@okta/samples-java-spring-boot",
   "version": "0.0.1",
   "publishConfig": {
     "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/okta/samples-java-spring-mvc.git"
+    "url": "https://github.com/okta/samples-java-spring-boot.git"
   },
-  "bugs": "https://github.com/okta/samples-java-spring-mvc/issues",
+  "bugs": "https://github.com/okta/samples-java-spring-boot/issues",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/okta/samples-java-spring-mvc",
+  "homepage": "https://github.com/okta/samples-java-spring-boot",
   "scripts": {
     "test:e2e": "webdriver-manager update && protractor test/e2e/conf.js",
     "mock-okta": "node tools/mock-okta",
@@ -21,7 +21,7 @@
     "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 15000",
     "test": "npm run test:app-server-all && npm run test:e2e",
     "prestart": "node tools/copy-static",
-    "start": "echo \"\n--- REPLACE THIS! ---\n\" && exit 1;"
+    "start": "mvn -f lib/pom.xml spring-boot:run -q -Drun.jvmArguments='-Dserver.port=3000'"
   },
   "devDependencies": {
     "chalk": "1.1.3",
