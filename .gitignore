@@ -5,3 +5,9 @@ npm-debug.log
 travis_phantomjs
 .DS_Store
 .vscode
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
