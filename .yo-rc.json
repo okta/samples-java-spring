@@ -1,0 +1,9 @@
+{
+  "@okta/generator-samples": {
+    "type": "end-to-end",
+    "environment": "Java",
+    "framework": "Spring MVC",
+    "name": "samples-java-spring-mvc",
+    "version": "1.7.0"
+  }
+}

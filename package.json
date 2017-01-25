@@ -1,0 +1,46 @@
+{
+  "name": "@okta/samples-java-spring-mvc",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/okta/samples-java-spring-mvc.git"
+  },
+  "bugs": "https://github.com/okta/samples-java-spring-mvc/issues",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/okta/samples-java-spring-mvc",
+  "scripts": {
+    "test:e2e": "webdriver-manager update && protractor test/e2e/conf.js",
+    "mock-okta": "node tools/mock-okta",
+    "mock-okta:debug": "DEBUG=mock-okta npm run mock-okta",
+    "wrap": "node tools/wrap-dependencies",
+    "test:mock-okta": "node test/app-server/lib/test-mock-okta",
+    "test:app-server": "mocha test/app-server/index --bail --timeout 15000",
+    "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 15000",
+    "test": "npm run test:app-server-all && npm run test:e2e",
+    "prestart": "node tools/copy-static",
+    "start": "echo \"\n--- REPLACE THIS! ---\n\" && exit 1;"
+  },
+  "devDependencies": {
+    "chalk": "1.1.3",
+    "cli-table2": "0.2.0",
+    "connect": "3.5.0",
+    "diff": "3.0.1",
+    "jasmine-reporters": "2.2.0",
+    "jws": "3.1.4",
+    "minimist": "1.2.0",
+    "protractor": "4.0.4",
+    "yakbak": "2.5.0"
+  },
+  "dependencies": {
+    "@okta/samples-js-angular-1": "1.6.0",
+    "chai": "3.5.0",
+    "chai-http": "3.0.0",
+    "fs-extra": "1.0.0",
+    "lodash.merge": "4.6.0",
+    "mocha": "3.1.2",
+    "pem-jwk": "1.5.1"
+  }
+}
