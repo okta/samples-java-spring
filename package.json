@@ -1,16 +1,16 @@
 {
-  "name": "@okta/samples-java-spring-boot",
+  "name": "@okta/samples-java-spring-mvc",
   "version": "0.0.1",
   "publishConfig": {
     "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/okta/samples-java-spring-boot.git"
+    "url": "https://github.com/okta/samples-java-spring-mvc.git"
   },
-  "bugs": "https://github.com/okta/samples-java-spring-boot/issues",
+  "bugs": "https://github.com/okta/samples-java-spring-mvc/issues",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/okta/samples-java-spring-boot",
+  "homepage": "https://github.com/okta/samples-java-spring-mvc",
   "scripts": {
     "test:e2e": "webdriver-manager update && protractor test/e2e/conf.js",
     "mock-okta": "node tools/mock-okta",

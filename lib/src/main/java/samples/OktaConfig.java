@@ -1,33 +1,39 @@
 package samples;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+        "oidc",
+        "server",
+        "mockOkta"
+})
 public class OktaConfig {
-    public Map config;
 
-    public OktaConfig() {
-        String path = System.getProperty("user.dir") + "/.samples.config.json";
-        try {
-            // Import config file
-            File f = new File(path);
-            ObjectMapper map = new ObjectMapper();
-            config = map.readValue(f, Map.class);
+    @JsonProperty("oidc")
+    private Oidc oidc;
+    @JsonProperty("server")
+    private Server server;
+    @JsonProperty("mockOkta")
+    private MockOkta mockOkta;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public String getValue(String name) {
-        // Parse through config object for key matching name
-        for (Object key : config.keySet()) {
-            Map map = (Map) config.get(key.toString());
+    @JsonProperty("oidc")
+    public Oidc getOidc() {return oidc;}
 
-            if ( map.get(name) != null) {
-                return map.get(name).toString();
-            }
-        }
-        return null;
-    }
+    @JsonProperty("oidc")
+    public void setOidc(Oidc oidc) {this.oidc = oidc;}
+
+    @JsonProperty("server")
+    public Server getServer() {return server;}
+
+    @JsonProperty("server")
+    public void setServer(Server server) {this.server = server;}
+
+    @JsonProperty("mockOkta")
+    public MockOkta getMockOkta() {return mockOkta;}
+
+    @JsonProperty("mockOkta")
+    public void setMockOkta(MockOkta mockOkta) {this.mockOkta = mockOkta;}
 }
