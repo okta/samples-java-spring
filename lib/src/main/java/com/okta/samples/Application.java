@@ -1,4 +1,4 @@
-package samples;
+package com.okta.samples;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
@@ -80,7 +80,7 @@ public class Application {
                 response.sendRedirect("/");
                 return null;
             } catch (IOException e) {
-                return e.getMessage();
+                return send401(response, e.getMessage());
             }
         }
 
@@ -271,7 +271,7 @@ public class Application {
                 .body("Missing required parameter: {{ " + param + " }}");
     }
 
-    public OktaConfig getConfig() {
+    private OktaConfig getConfig() {
         String path = System.getProperty("user.dir") + "/.samples.config.json";
         try {
             // Import config file
@@ -279,10 +279,8 @@ public class Application {
             return map.readValue(new File(path), OktaConfig.class);
         } catch (Exception e) {
             e.printStackTrace();
-
+            throw new IllegalStateException("Unable to read configuration");
         }
-        System.exit(1);
-        return null;
     }
 
     public static void main(String[] args) throws Exception {

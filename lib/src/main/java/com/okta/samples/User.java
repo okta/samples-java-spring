@@ -1,4 +1,4 @@
-package samples;
+package com.okta.samples;
 
 import java.util.HashMap;
 import java.util.Map;

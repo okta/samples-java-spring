@@ -21,7 +21,7 @@
     "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 15000",
     "test": "npm run test:app-server-all && npm run test:e2e",
     "prestart": "node tools/copy-static",
-    "start": "mvn -f lib/pom.xml spring-boot:run -q -Drun.jvmArguments='-Dserver.port=3000'"
+    "start": "mvn -f lib/pom.xml spring-boot:run --quiet"
   },
   "devDependencies": {
     "chalk": "1.1.3",
