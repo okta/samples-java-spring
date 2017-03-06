@@ -106,6 +106,7 @@ signIn.renderEl({ el: '#app-container' }, () => {});</code></pre>
     {{/config.server.useWebpackDevServer}}
 
     <script src="/assets/bundle.js"></script>
+    <script src="/assets/doc.js"></script>
     <script>
      var options = {
        container: '#app-container',
@@ -123,6 +124,7 @@ signIn.renderEl({ el: '#app-container' }, () => {});</code></pre>
      };
      {{/user}}
 
+     doc.initDoc();
      bundle.bootstrap(options);
     </script>
   </body>
