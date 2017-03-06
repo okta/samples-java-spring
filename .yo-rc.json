@@ -4,6 +4,7 @@
     "environment": "Java",
     "framework": "Spring MVC",
     "name": "samples-java-spring-mvc",
-    "version": "1.7.0"
+    "version": "1.10.0",
+    "parentType": "sample"
   }
 }

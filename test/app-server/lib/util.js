@@ -14,7 +14,7 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const config = require('../../../.samples.config.json');
+const config = require('../../../.samples.config.json').oktaSample;
 const errors = require('./errors');
 
 const expect = chai.expect;
@@ -136,7 +136,12 @@ util.shouldNotRedirect = (reqPromise, msg) => (
  */
 util.itLoadsTemplateFor = (docPartial, reqFn) => {
   function hasBodyText(text) {
-    return reqFn().then(res => expect(res.text).to.contain(text));
+    return reqFn()
+    .then(res => expect(res.text).to.contain(text))
+    .catch(() => {
+      const err = `Expected response to contain ${text}`;
+      throw new Error(`${err}\n${errors.INVALID_TEMPLATE}`);
+    });
   }
 
   it('returns status code 200', () => (
@@ -146,23 +151,23 @@ util.itLoadsTemplateFor = (docPartial, reqFn) => {
     reqFn().then(res => expect(res).to.be.html)
   ));
   it('loads sign-in css', () => (
-    hasBodyText('<link href="/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>')
+    hasBodyText('<link href="/assets/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>')
   ));
   it('loads theme css', () => (
-    hasBodyText('<link href="/css/okta-theme.css" type="text/css" rel="stylesheet"/>')
+    hasBodyText('<link href="/assets/css/okta-theme.css" type="text/css" rel="stylesheet"/>')
   ));
   it('sets base anchor for frameworks like angular', () => (
     hasBodyText('<base href="/"/>')
   ));
   it('loads javascript bundle', () => (
-    hasBodyText('<script src="/bundle.js"></script>')
+    hasBodyText('<script src="/assets/bundle.js"></script>')
   ));
   it('runs bootstrap', () => (
     hasBodyText('bundle.bootstrap(')
   ));
-  it('includes the correct doc partial', () => (
+  it('includes the correct template', () => (
     hasBodyText(`class="doc-${docPartial}"`).catch(() => {
-      const err = `Expected docs/${docPartial}.mustache to be loaded`;
+      const err = `Expected tools/templates/${docPartial}.mustache to be loaded`;
       throw new Error(`${err}\n${errors.DOC_PARTIAL}`);
     })
   ));
