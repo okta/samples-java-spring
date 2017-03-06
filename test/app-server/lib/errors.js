@@ -11,7 +11,7 @@
  */
 
 /* eslint prefer-template: 0 */
-const config = require('../../../.samples.config.json');
+const config = require('../../../.samples.config.json').oktaSample;
 
 exports.SERVER_PORT = `
       The app server is not running, or it is not running on
@@ -24,20 +24,35 @@ exports.SERVER_PORT = `
 exports.MISSING_FRONTEND_ASSET = `
       You are missing static assets from the installed frontend sample.
 
+      Static files are requests to /assets/*, i.e. /assets/bundle.js. These
+      files are copied in the "prestart" script to server.staticDir, which is
+      configured in .samples.config.json.
+
+      NOTE: It is important to map server.staticDir to /assets!
+
       To fix this:
       1. Verify that the "prestart" script in package.json copies the included
-         sample frontend app from node_modules to the server.staticDir
-         configured in .samples.config.json
+         sample frontend app from node_modules to server.staticDir
       2. Run "npm run prestart" to copy these files
-      3. Configure your app server to serve static files from server.staticDir
+      3. Configure your app server to serve all requests to /assets/* from
+         server.staticDir
+`;
+
+exports.INVALID_TEMPLATE = `
+      The best way to render the correct html is to use the included
+      mustache templates, which are found in tools/templates/*.mustache.
+
+      If rendering mustache templates is not supported in your framework,
+      you'll need to copy the mustache template html to the supported
+      format for your template rendering engine.
+
+      Read more about mustache and how to add it to different languages here:
+      https://mustache.github.io/
 `;
 
 exports.DOC_PARTIAL = `
-      To load mustache partials, refer to:
-      1. The mustache homepage for a list of language specific docs:
-         https://mustache.github.io/
-      2. The mustache manual:
-         https://mustache.github.io/mustache.5.html
+      You are probably loading the wrong mustache template. To fix this, load
+      the correct mustache template for this page.
 `;
 
 exports.CODE_COOKIES_MISSING = `

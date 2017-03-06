@@ -30,7 +30,7 @@
 
 const http = require('http');
 
-const config = require('../../../.samples.config.json');
+const config = require('../../../.samples.config.json').oktaSample;
 
 let mocks = [];
 

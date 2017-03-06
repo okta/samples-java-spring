@@ -14,7 +14,7 @@
 
 const util = require('../lib/util');
 const errors = require('../lib/errors');
-const config = require('../../../.samples.config.json');
+const config = require('../../../.samples.config.json').oktaSample;
 const keys1 = require('../lib/keys1');
 const keys2 = require('../lib/keys2');
 const jws = require('jws');
@@ -223,6 +223,11 @@ describe('Authorization Code', () => {
           const req = mockOktaRequests(mock).then(validateCallback);
           return util.should401(req, errors.CODE_TOKEN_BAD_ID_TOKEN);
         });
+        it('returns 401 if the idToken is not signed', () => {
+          const mock = util.expand('idToken.header.alg', 'none');
+          const req = mockOktaRequests(mock).then(validateCallback);
+          return util.should401(req, errors.CODE_TOKEN_INVALID_SIG);
+        });
       });
       describe('Signature', () => {
         it('makes a request to /oauth2/v1/keys to fetch the public keys', () => {
@@ -240,7 +245,7 @@ describe('Authorization Code', () => {
           return util.should401(req, errors.CODE_TOKEN_INVALID_SIG);
         });
         it('returns 401 if the token header algorithm does not match the published key algorithm', () => {
-          const mock = util.expand('idToken.header.alg', 'none');
+          const mock = util.expand('idToken.header.alg', 'RS512');
           const req = mockOktaRequests(mock).then(validateCallback);
           return util.should401(req, errors.CODE_TOKEN_INVALID_ALG);
         });

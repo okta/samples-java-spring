@@ -17,11 +17,12 @@
     "mock-okta:debug": "DEBUG=mock-okta npm run mock-okta",
     "wrap": "node tools/wrap-dependencies",
     "test:mock-okta": "node test/app-server/lib/test-mock-okta",
-    "test:app-server": "mocha test/app-server/index --bail --timeout 15000",
-    "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 15000",
-    "test": "npm run test:app-server-all && npm run test:e2e",
-    "prestart": "node tools/copy-static",
-    "start": "mvn -f lib/pom.xml spring-boot:run --quiet"
+    "test:app-server": "mocha test/app-server/index --bail --timeout 30000",
+    "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 30000",
+    "test": "npm run test:app-server-all && npm run test:docs && npm run test:e2e",
+    "prestart": "build-frontend",
+    "start": "mvn -f lib/pom.xml spring-boot:run --quiet",
+    "test:docs": "mocha test/docs/specs/ --bail"
   },
   "devDependencies": {
     "chalk": "1.1.3",
@@ -35,10 +36,10 @@
     "yakbak": "2.5.0"
   },
   "dependencies": {
-    "@okta/samples-js-angular-1": "1.6.0",
+    "@okta/samples-js-angular-1": "1.7.0",
     "chai": "3.5.0",
+    "chai-files": "1.4.0",
     "chai-http": "3.0.0",
-    "fs-extra": "1.0.0",
     "lodash.merge": "4.6.0",
     "mocha": "3.1.2",
     "pem-jwk": "1.5.1"
