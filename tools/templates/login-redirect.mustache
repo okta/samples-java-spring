@@ -104,6 +104,7 @@ auth.token.getWithRedirect({
     {{/config.server.useWebpackDevServer}}
 
     <script src="/assets/bundle.js"></script>
+    <script src="/assets/doc.js"></script>
     <script>
      var options = {
        container: '#app-container',
@@ -121,6 +122,7 @@ auth.token.getWithRedirect({
      };
      {{/user}}
 
+     doc.initDoc();
      bundle.bootstrap(options);
     </script>
   </body>

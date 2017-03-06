@@ -10,6 +10,7 @@
   - [Front End](#front-end)
     - [Login Redirect](#login-redirect)
     - [Custom Login Form](#custom-login-form)
+    - [Using a different front-end](#using-a-different-front-end)
   - [Back End](#back-end)
     - [Routes](#routes)
     - [Handle the Redirect](#handle-the-redirect)
@@ -43,28 +44,25 @@ This custom-branded login experience uses the [Okta Sign-In Widget](http://devel
 
 ## Prerequisites
 
-This sample app depends on [Node.js](https://nodejs.org/en/) for frontend dependencies and some build scripts - if you don't have it, install it from [nodejs.org](https://nodejs.org/en/).
+This sample app depends on [Node.js](https://nodejs.org/en/) for front-end dependencies and some build scripts - if you don't have it, install it from [nodejs.org](https://nodejs.org/en/).
 
 ```bash
 # Verify that node is installed
 $ node -v
 ```
 
-Then, clone this sample from GitHub and install the frontend dependencies:
+Then, clone this sample from GitHub and install the front-end dependencies:
 ```bash
 # Clone the repo and navigate to the samples-java-spring-mvc dir
 $ git clone git@github.com:okta/samples-java-spring-mvc.git && cd samples-java-spring-mvc
 
-# Install the frontend dependencies
+# Install the front-end dependencies
 [samples-java-spring-mvc]$ npm install
 ```
 
-{{ SAMPLE-DEVELOPER: ADD EXTRA SETUP HERE }}
-
-
 ## Quick Start
 
-Start the back-end for your sample application with `npm start` or ` {{ SAMPLE-DEVELOPER: ADD START SCRIPT HERE }} `. This will start the app server on [http://localhost:3000](http://localhost:3000).
+Start the back-end for your sample application with `npm start` or `mvn -f lib/pom.xml spring-boot:run --quiet`. This will start the app server on [http://localhost:3000](http://localhost:3000).
 
 By default, this application uses a mock authorization server which responds to API requests like a configured Okta org - it's useful if you haven't yet set up OpenID Connect but would still like to try this sample. 
 
@@ -164,6 +162,28 @@ To perform the [Authorization Code Flow](https://tools.ietf.org/html/rfc6749#sec
 
 **Note:** Additional configuration for the `SignIn` object is available at [OpenID Connect, OAuth 2.0, and Social Auth with Okta](https://github.com/okta/okta-signin-widget#configuration).
 
+### Using a different front-end
+
+By default, this end-to-end sample ships with our [Angular 1 front-end sample](https://github.com/okta/samples-js-angular-1). To run this back-end with a different front-end:
+
+1. Choose the front-end
+
+    | Framework | NPM module | Github |
+    |-----------|------------|--------|
+    | Angular 1 | [@okta/samples-js-angular-1](https://www.npmjs.com/package/@okta/samples-js-angular-1) | https://github.com/okta/samples-js-angular-1 |
+    | React | [@okta/samples-js-react](https://www.npmjs.com/package/@okta/samples-js-react) | https://github.com/okta/samples-js-react |
+    | Elm | [@okta/samples-elm](https://www.npmjs.com/package/@okta/samples-elm) | https://github.com/okta/samples-elm |
+
+
+2. Install the front-end
+
+    ```bash
+    # Use the NPM module for the front-end you want to install. I.e. for React:
+    [samples-java-spring-mvc]$ npm install @okta/samples-js-react
+    ```
+
+3. Restart the server. You should be up and running with the new front-end!
+
 ## Back-end
 To complete the [Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1), your back-end server performs the following tasks:
   - Handle the [Authorization Code code exchange](https://tools.ietf.org/html/rfc6749#section-1.3.1) callback
@@ -192,12 +212,65 @@ Two cookies are created after authentication: `okta-oauth-nonce` and `okta-auth-
 
 In this sample, we verify the state here:
 
-{{ SAMPLE-DEVELOPER: ADD CHECKING FOR COOKIES HERE }}
+```java
+// Application.java
+
+// Callback method 
+public String callback(@RequestParam("state") String state,
+      @RequestParam("code") String code,
+      @CookieValue(value="okta-oauth-state", defaultValue = "") String cookieState,
+      @CookieValue(value="okta-oauth-nonce", defaultValue = "") String cookieNonce,
+      HttpServletResponse response, HttpServletRequest request){
+
+        if (cookieState.equals("") || cookieNonce.equals("")) {
+            // Verify state and nonce from cookie
+            return send401(response, "Error retrieving cookies");
+        }
+
+        if (cookieState.equals("") || cookieNonce.equals("")) {
+            // Verify state and nonce from cookie
+            return send401(response, "Error retrieving cookies");
+        }
+
+        if (!state.equals(cookieState)) {
+            // Verify state
+            return send401(response, "State from cookie does not match query state");
+        }
+```
 
 ### Code Exchange
 Next, we exchange the returned authorization code for an `id_token` and/or `access_token`. You can choose the best [token authentication method](http://developer.okta.com/docs/api/resources/oauth2.html#token-request) for your application. In this sample, we use the default token authentication method `client_secret_basic`:
 
-{{ SAMPLE-DEVELOPER: ADD TOKEN REQUEST CODE HERE }}
+
+```java
+// Application.java
+
+// Build queryString
+String queryString = null;
+try {
+    queryString = getTokenUri(code);
+} catch (UnsupportedEncodingException e) {
+    return send401(response, e.getMessage());
+}
+
+// Base64 encode <client_id>:<client_secret>
+String clientId = CONFIG.getOidc().getClientId();
+String clientSecret = CONFIG.getOidc().getClientSecret();
+byte[] encodedAuth = Base64.encodeBase64((clientId + ":" + clientSecret).getBytes());
+
+HttpResponse<JsonNode> jsonResponse = null;
+try {
+    jsonResponse = Unirest.post(tokenEndpoint + queryString)
+            .header("user-agent", null)
+            .header("content-type", "application/x-www-form-urlencoded")
+            .header("authorization", "Basic " + new String(encodedAuth))
+            .header("connection", "close")
+            .header("accept", "application/json")
+            .asJson();
+} catch (Exception e) {
+    return send401(response, e.getMessage());
+}
+```
 
 A successful response returns an `id_token` which looks similar to:
 ```
@@ -217,7 +290,7 @@ ntFBNjluFhNLJIUkEFovEDlfuB4tv_M8BM75celdy3jkpOurg
 ### Validation
 After receiving the `id_token`, we [validate](http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation) the token and its claims to prove its integrity. 
 
-In this sample, we use the {{ SAMPLE-DEVELOPER: ADD TOKEN LIBRARY INFO HERE }} library to decode and validate the token.
+In this sample, we use a [JSON Object Signing and Encryption (JOSE)](https://bitbucket.org/b_c/jose4j/wiki/Home) library to decode and validate the token.
 
 There are a couple things we need to verify:
 
@@ -235,7 +308,35 @@ For example:
 - If the `kid` has been cached, use it to validate the signature.
 - If not, make a request to the `jwks_uri`. Cache the new `jwks`, and use the response to validate the signature.
 
-{{ SAMPLE-DEVELOPER: ADD JWKS AND CACHING CODE HERE }}
+
+```java
+// Application.java
+
+private Key fetchJwk(String idToken) throws JoseException, IOException, Exception {
+    JsonWebSignature jws = new JsonWebSignature();
+    jws.setCompactSerialization(idToken);
+    String keyID = jws.getKeyIdHeaderValue();
+    String keyAlg = jws.getAlgorithmHeaderValue();
+
+    if (CACHED_KEYS.get(keyID) != null) {
+        return CACHED_KEYS.get(keyID);
+    }
+
+    String jwksUri = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/keys";
+    HttpsJwks httpJkws = new HttpsJwks(jwksUri);
+
+    for (JsonWebKey key : httpJkws.getJsonWebKeys()) {
+        if (!keyAlg.equals(key.getAlgorithm())) {
+            throw new Exception("invalid algorithm");
+        }
+        CACHED_KEYS.put(key.getKeyId(), key.getKey());
+    }
+
+    if (CACHED_KEYS.get(keyID) == null) {
+        return null; // No Key found
+    }
+    return CACHED_KEYS.get(keyID);
+}
 
 
 #### Verify fields
@@ -246,32 +347,84 @@ Verify the `id_token` from the [Code Exchange](#code-exchange) contains our expe
   - The `clientId` stored in our configuration matches the `aud` claim
   - If the token expiration time has passed, the token must be revoked
 
-{{ SAMPLE-DEVELOPER: ADD VERIFY FIELDS CODE HERE }}
+```java
+// Application.java
+
+private Map validateToken(String idToken, String nonce) throws Exception {
+    Key key = fetchJwk(idToken);
+
+    // Allow for 5 minute clock skew
+    int clock_skew = 300;
+
+    JwtConsumer jwtConsumer = new JwtConsumerBuilder()
+            .setRequireExpirationTime()
+            .setAllowedClockSkewInSeconds(clock_skew)
+            .setExpectedAudience(CONFIG.getOidc().getClientId())
+            .setExpectedIssuer(CONFIG.getOidc().getOktaUrl())
+            .setVerificationKey(key)
+            .build();
+
+    //  Validate the JWT and process it to the Claims
+    JwtClaims jwtClaims = jwtConsumer.processToClaims(idToken);
+
+}
+```
 
 
 #### Verify issued time
 The `iat` value indicates what time the token was "issued at". We verify that this claim is valid by checking that the token was not issued in the future, with some leeway for clock skew.
 
-{{ SAMPLE-DEVELOPER: ADD VERIFY IAT CODE HERE }}
+```java
+// Application.java
+        
+NumericDate current = NumericDate.now();
+current.addSeconds(clock_skew);
 
+if(jwtClaims.getIssuedAt().isAfter(current)){
+    throw new Exception("invalid iat claim");
+}
+```
 
 #### Verify nonce
 To mitigate replay attacks, verify that the `nonce` value in the `id_token` matches the `nonce` stored in the cookie `okta-oauth-nonce`.
 
-{{ SAMPLE-DEVELOPER: ADD VERIFY NONCE CODE HERE }}
+```java
+// Application.java
+
+String claimsNonce = jwtClaims.getClaimsMap().get("nonce").toString();
+
+if (!claimsNonce.equals(nonce)) {
+    throw new Exception("Claims nonce does not mach cookie nonce");
+}
+```
 
 ### Set user session
 If the `id_token` passes validation, we can then set the `user` session in our application.
 
 In a production app, this code would lookup the `user` from a user store and set the session for that user. However, for simplicity, in this sample we set the session with the claims from the `id_token`.
 
-{{ SAMPLE-DEVELOPER: ADD SETTING USER SESSION CODE HERE }}
+```java
+// Application.java
+
+user.setEmail(claims.get("email").toString());
+user.setClaims(claims);
+
+HttpSession session = request.getSession();
+session.setAttribute("user", user.getEmail());
+```
 
 ### Logout
 In Spring MVC, you can clear the the user session by:
 
-{{ SAMPLE-DEVELOPER: ADD LOGOUT CODE HERE }}
+```java
+// Application.java
 
+public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        user = new User();
+        return "redirect:/";
+    }
+```
 The Okta session is terminated in our client-side code.
 
 ## Conclusion

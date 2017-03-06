@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.util.UriUtils;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,28 +54,28 @@ public class Application {
     @RequestMapping(value = "/", method = GET)
     public String scenarios(Map<String, Object> model) {
         model.put("user", user.toDict());
-        model.put("config", CONFIG);
-        return "index";
+        model.put("config", CONFIG.getOktaSample());
+        return "overview";
     }
 
     @RequestMapping(value = "/authorization-code/login-redirect", method = GET)
     public String loginRedirect(Map<String, Object> model) {
         model.put("user", user.toDict());
-        model.put("config", CONFIG);
-        return "redirect";
+        model.put("config", CONFIG.getOktaSample());
+        return "login-redirect";
     }
 
     @RequestMapping(value = "/authorization-code/login-custom", method = GET)
     public String loginCustom(Map<String, Object> model) {
         model.put("user", user.toDict());
-        model.put("config", CONFIG);
-        return "custom";
+        model.put("config", CONFIG.getOktaSample());
+        return "login-custom";
     }
 
     @RequestMapping(value = "/authorization-code/profile", method = GET)
     public String profile(Map<String, Object> model, HttpServletResponse response, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null ) {
+        if (session == null) {
             // No session - redirect
             try {
                 response.sendRedirect("/");
@@ -85,8 +86,8 @@ public class Application {
         }
 
         model.put("user", user.toDict());
-        model.put("config", CONFIG);
-        return "userProfile";
+        model.put("config", CONFIG.getOktaSample());
+        return "profile";
     }
 
     @RequestMapping("/authorization-code/callback")
@@ -119,9 +120,9 @@ public class Application {
             return send401(response, e.getMessage());
         }
 
-        String tokenEndpoint = CONFIG.getOidc().getOktaUrl() + "/oauth2/v1/token?";
-        String clientId = CONFIG.getOidc().getClientId();
-        String clientSecret = CONFIG.getOidc().getClientSecret();
+        String tokenEndpoint = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/token?";
+        String clientId = CONFIG.getOktaSample().getOidc().getClientId();
+        String clientSecret = CONFIG.getOktaSample().getOidc().getClientSecret();
         byte[] encodedAuth = Base64.encodeBase64((clientId + ":" + clientSecret).getBytes());
 
         // Bypass JSESSIONID Cookie to pass yakbak tests
@@ -200,8 +201,8 @@ public class Application {
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                 .setRequireExpirationTime()
                 .setAllowedClockSkewInSeconds(clock_skew)
-                .setExpectedAudience(CONFIG.getOidc().getClientId())
-                .setExpectedIssuer(CONFIG.getOidc().getOktaUrl())
+                .setExpectedAudience(CONFIG.getOktaSample().getOidc().getClientId())
+                .setExpectedIssuer(CONFIG.getOktaSample().getOidc().getOktaUrl())
                 .setVerificationKey(key)
                 .build();
 
@@ -227,33 +228,37 @@ public class Application {
     }
 
     private String getTokenUri(String code) throws UnsupportedEncodingException {
-        String redirectUri = CONFIG.getOidc().getRedirectUri();
+        String redirectUri = CONFIG.getOktaSample().getOidc().getRedirectUri();
         return "grant_type=authorization_code&code=" +
                 UriUtils.encode(code, "UTF-8") +
                 "&redirect_uri=" +
                 UriUtils.encode(redirectUri, "UTF-8");
     }
 
-    private Key fetchJwk(String idToken) throws JoseException, IOException {
+    private Key fetchJwk(String idToken) throws JoseException, IOException, Exception {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setCompactSerialization(idToken);
         String keyID = jws.getKeyIdHeaderValue();
+        String keyAlg = jws.getAlgorithmHeaderValue();
 
         if (CACHED_KEYS.get(keyID) != null) {
             return CACHED_KEYS.get(keyID);
         }
 
-        String jwksUri = CONFIG.getOidc().getOktaUrl() + "/oauth2/v1/keys";
+        String jwksUri = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/keys";
         HttpsJwks httpJkws = new HttpsJwks(jwksUri);
 
         for (JsonWebKey key : httpJkws.getJsonWebKeys()) {
+            if (!keyAlg.equals(key.getAlgorithm())) {
+                throw new Exception("invalid algorithm");
+            }
             CACHED_KEYS.put(key.getKeyId(), key.getKey());
         }
 
-        if (CACHED_KEYS.get(keyID) != null) {
-            return CACHED_KEYS.get(keyID);
+        if (CACHED_KEYS.get(keyID) == null) {
+            return null; // No Key found
         }
-        return null; // No Key found
+        return CACHED_KEYS.get(keyID);
     }
 
     @RequestMapping("authorization-code/logout")
