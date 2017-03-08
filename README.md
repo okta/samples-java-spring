@@ -337,6 +337,7 @@ private Key fetchJwk(String idToken) throws JoseException, IOException, Exceptio
     }
     return CACHED_KEYS.get(keyID);
 }
+```
 
 
 #### Verify fields
