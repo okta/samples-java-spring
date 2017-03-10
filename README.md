@@ -1,4 +1,4 @@
-# AngularJS 1.x and Spring MVC Sample Application
+# AngularJS 1.x and Spring MVC Sample Applications
 
 ### Table of Contents
 
