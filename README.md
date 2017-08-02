@@ -77,7 +77,7 @@ If you'd like to test this sample against your own Okta org, follow [these steps
 // .samples.config.json
 {
   "oidc": {
-    "oktaUrl": "https://{{yourOktaOrg}}.oktapreview.com",
+    "oktaUrl": "https://{{yourOktaDomain}}.com",
     "clientId": "{{yourClientId}}",
     "clientSecret": "{{yourClientSecret}}",
     "redirectUri": "http://localhost:3000/authorization-code/callback"
@@ -241,7 +241,6 @@ public String callback(@RequestParam("state") String state,
 ### Code Exchange
 Next, we exchange the returned authorization code for an `id_token` and/or `access_token`. You can choose the best [token authentication method](http://developer.okta.com/docs/api/resources/oauth2.html#token-request) for your application. In this sample, we use the default token authentication method `client_secret_basic`:
 
-
 ```java
 // Application.java
 
@@ -308,7 +307,6 @@ For example:
 - If the `kid` has been cached, use it to validate the signature.
 - If not, make a request to the `jwks_uri`. Cache the new `jwks`, and use the response to validate the signature.
 
-
 ```java
 // Application.java
 
@@ -338,7 +336,6 @@ private Key fetchJwk(String idToken) throws JoseException, IOException, Exceptio
     return CACHED_KEYS.get(keyID);
 }
 ```
-
 
 #### Verify fields
 
@@ -370,7 +367,6 @@ private Map validateToken(String idToken, String nonce) throws Exception {
 
 }
 ```
-
 
 #### Verify issued time
 The `iat` value indicates what time the token was "issued at". We verify that this claim is valid by checking that the token was not issued in the future, with some leeway for clock skew.
@@ -421,11 +417,12 @@ In Spring MVC, you can clear the the user session by:
 // Application.java
 
 public String logout(HttpServletRequest request) {
-        request.getSession().invalidate();
-        user = new User();
-        return "redirect:/";
-    }
+    request.getSession().invalidate();
+    user = new User();
+    return "redirect:/";
+}
 ```
+
 The Okta session is terminated in our client-side code.
 
 ## Conclusion

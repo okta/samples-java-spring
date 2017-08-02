@@ -1,6 +1,6 @@
 {
   "name": "@okta/samples-java-spring-mvc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publishConfig": {
     "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
   },
@@ -29,10 +29,12 @@
     "cli-table2": "0.2.0",
     "connect": "3.5.0",
     "diff": "3.0.1",
+    "forever-monitor": "1.7.1",
     "jasmine-reporters": "2.2.0",
     "jws": "3.1.4",
     "minimist": "1.2.0",
     "protractor": "4.0.4",
+    "wait-on": "2.0.2",
     "yakbak": "2.5.0"
   },
   "dependencies": {

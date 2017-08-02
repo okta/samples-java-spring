@@ -138,6 +138,7 @@ util.mapRequestToCache = (req) => {
   delete headers['x-okta-user-agent-extended'];
   delete headers['if-none-match'];
   delete headers['if-modified-since'];
+  delete headers.expect;
   delete headers.referer;
 
   // Enforce a consistent userAgent to prevent differences returned from

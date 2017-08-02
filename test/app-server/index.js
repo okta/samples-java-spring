@@ -12,10 +12,10 @@
 
 require('./spec-list');
 
-const startAndWaitFor = require('../../tools/start-and-wait-for');
+const daemonUtil = require('../../tools/daemon-util');
 
-const promise = startAndWaitFor('npm', ['run', 'test:mock-okta'], 'Test server listening on port 7777');
+const promise = daemonUtil.startTestMockOkta();
 
 before(() => promise);
 
-after(() => promise.then(process => process.kill()));
+after(() => promise.then(child => child.stop()));

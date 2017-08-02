@@ -96,27 +96,35 @@ exports.CODE_TOKEN_INVALID_METHOD = `
 `;
 
 exports.CODE_TOKEN_INVALID_CONTENT_TYPE = `
-      The /authorization-code/callback endpoint should make a request to the
-      Okta token endpoint. The /token request should be url encoded. To fix
-      this, set this header:
+      When making a request to the Okta token endpoint, please make sure 
+      to set the content-type header correctly. To fix this, set this 
+      header:
 
       content-type: application/x-www-form-urlencoded
 `;
 
 exports.CODE_TOKEN_INVALID_HEADER_ACCEPT = `
-      The /authorization-code/callback endpoint should make a request to the
-      Okta token endpoint. The /token request should be url encoded. To fix
-      this, set this header:
+     When making a request to the Okta token endpoint, please make sure 
+      to set the accept header correctly. To fix this, set this 
+      header:
 
       accept: application/json
 `;
 
 exports.CODE_TOKEN_INVALID_HEADER_CONNECTION = `
-      The /authorization-code/callback endpoint should make a request to the
-      Okta token endpoint. The /token request should be url encoded. To fix
-      this, set this header:
+      When making a request to the Okta token endpoint, please make sure 
+      to set the connection header correctly. To fix this, set this 
+      header:
 
       connection: close
+`;
+
+exports.CODE_TOKEN_INVALID_HEADER_CONTENT_LENGTH = `
+      When making a request to the Okta token endpoint, please make sure 
+      to set the content-length header correctly. To fix this, set this 
+      header:
+
+      content-length: 0
 `;
 
 exports.CODE_TOKEN_INVALID_AUTHORIZATION = `
