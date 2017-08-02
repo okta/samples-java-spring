@@ -6,7 +6,6 @@ travis_phantomjs
 .DS_Store
 .vscode
 
-
 public/
 
 # Intellij

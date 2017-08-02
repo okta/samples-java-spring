@@ -12,19 +12,18 @@
 
 require('./spec-list');
 
-const startAndWaitFor = require('../../tools/start-and-wait-for');
-const samplesConfig = require('../../.samples.config.json').oktaSample;
+const daemonUtil = require('../../tools/daemon-util');
 
 const promises = Promise.all([
-  startAndWaitFor('npm', ['start'], samplesConfig.server.startSignal, 'green'),
-  startAndWaitFor('npm', ['run', 'test:mock-okta'], 'Test server listening on port 7777'),
+  daemonUtil.startAppServer(),
+  daemonUtil.startTestMockOkta(),
 ]);
 
 before(() => promises);
 
 after(() => {
   promises.then((childProcesses) => {
-    childProcesses.forEach(child => process.kill(-child.pid));
+    childProcesses.forEach(child => child.stop());
   });
   return new Promise(resolve => setTimeout(() => resolve(), 1000));
 });
