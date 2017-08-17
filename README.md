@@ -329,7 +329,7 @@ private Key fetchJwk(String idToken) throws JoseException, IOException, Exceptio
         return CACHED_KEYS.get(keyID);
     }
 
-    String jwksUri = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/keys";
+    String jwksUri = CONFIG.getOktaSample().getOidc().getIssuer() + "/v1/keys";
     HttpsJwks httpJkws = new HttpsJwks(jwksUri);
 
     for (JsonWebKey key : httpJkws.getJsonWebKeys()) {
@@ -367,7 +367,7 @@ private Map validateToken(String idToken, String nonce) throws Exception {
             .setRequireExpirationTime()
             .setAllowedClockSkewInSeconds(clock_skew)
             .setExpectedAudience(CONFIG.getOidc().getClientId())
-            .setExpectedIssuer(CONFIG.getOidc().getOktaUrl())
+            .setExpectedIssuer(CONFIG.getOidc().getIssuer())
             .setVerificationKey(key)
             .build();
 

@@ -18,3 +18,4 @@ public
 .project
 .settings
 target
+lib/src/main/resources/public/assets

@@ -58,6 +58,7 @@
     <div class="ui segment">
       <pre><code class="javascript">const auth = new OktaAuth({
   url: '{{config.oidc.oktaUrl}}',
+  issuer: '{{config.oidc.issuer}}',
   clientId: '{{config.oidc.clientId}}',
   redirectUri: '{{config.oidc.redirectUri}}',
   scopes: ['openid', 'email', 'profile'],
@@ -104,10 +105,12 @@ auth.token.getWithRedirect({
     {{/config.server.useWebpackDevServer}}
 
     <script src="/assets/bundle.js"></script>
+    <script src="/assets/doc.js"></script>
     <script>
      var options = {
        container: '#app-container',
        oktaUrl: '{{{config.oidc.oktaUrl}}}',
+       issuer: '{{{config.oidc.issuer}}}',
        clientId: '{{config.oidc.clientId}}',
        redirectUri: '{{{config.oidc.redirectUri}}}'
      };
@@ -121,6 +124,7 @@ auth.token.getWithRedirect({
      };
      {{/user}}
 
+     doc.initDoc();
      bundle.bootstrap(options);
     </script>
   </body>

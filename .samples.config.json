@@ -8,7 +8,7 @@
       "redirectUri": "http://localhost:3000/authorization-code/callback"
     },
     "server": {
-      "staticDir": "dist",
+      "staticDir": "lib/src/main/resources/public/assets/",
       "port": 3000,
       "framework": "Spring MVC",
       "environment": "Java"

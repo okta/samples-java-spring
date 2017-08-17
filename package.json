@@ -1,6 +1,6 @@
 {
   "name": "@okta/samples-java-spring-mvc",
-  "version": "0.0.1",
+  "version": "1.0.0-SNAPSHOT",
   "publishConfig": {
     "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
   },
@@ -17,8 +17,8 @@
     "mock-okta:debug": "DEBUG=mock-okta npm run mock-okta",
     "wrap": "node tools/wrap-dependencies",
     "test:mock-okta": "node test/app-server/lib/test-mock-okta",
-    "test:app-server": "mocha test/app-server/index --bail --timeout 30000",
-    "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 30000",
+    "test:app-server": "mocha test/app-server/index --bail --timeout 60000",
+    "test:app-server-all": "mocha test/app-server/with-app-server-start --timeout 60000",
     "test": "npm run test:app-server-all && npm run test:docs && npm run test:e2e",
     "prestart": "build-frontend",
     "start": "mvn -f lib/pom.xml spring-boot:run --quiet",
