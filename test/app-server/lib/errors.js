@@ -83,7 +83,7 @@ exports.CODE_TOKEN_INVALID_URL = `
       Okta token endpoint. The url should look EXACTLY like this - Note, the
       order of query params is important.
 
-      ${config.mockOkta.proxy}:${config.mockOkta.port}/oauth2/v1/token
+      ${config.mockOkta.proxy}:${config.mockOkta.port}/oauth2/default/v1/token
         ?grant_type=authorization_code
         &code=SOME_CODE
         &redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauthorization-code%2Fcallback
@@ -96,27 +96,35 @@ exports.CODE_TOKEN_INVALID_METHOD = `
 `;
 
 exports.CODE_TOKEN_INVALID_CONTENT_TYPE = `
-      The /authorization-code/callback endpoint should make a request to the
-      Okta token endpoint. The /token request should be url encoded. To fix
-      this, set this header:
+      When making a request to the Okta token endpoint, please make sure 
+      to set the content-type header correctly. To fix this, set this 
+      header:
 
       content-type: application/x-www-form-urlencoded
 `;
 
 exports.CODE_TOKEN_INVALID_HEADER_ACCEPT = `
-      The /authorization-code/callback endpoint should make a request to the
-      Okta token endpoint. The /token request should be url encoded. To fix
-      this, set this header:
+     When making a request to the Okta token endpoint, please make sure 
+      to set the accept header correctly. To fix this, set this 
+      header:
 
       accept: application/json
 `;
 
 exports.CODE_TOKEN_INVALID_HEADER_CONNECTION = `
-      The /authorization-code/callback endpoint should make a request to the
-      Okta token endpoint. The /token request should be url encoded. To fix
-      this, set this header:
+      When making a request to the Okta token endpoint, please make sure 
+      to set the connection header correctly. To fix this, set this 
+      header:
 
       connection: close
+`;
+
+exports.CODE_TOKEN_INVALID_HEADER_CONTENT_LENGTH = `
+      When making a request to the Okta token endpoint, please make sure 
+      to set the content-length header correctly. To fix this, set this 
+      header:
+
+      content-length: 0
 `;
 
 exports.CODE_TOKEN_INVALID_AUTHORIZATION = `
@@ -159,7 +167,7 @@ exports.CODE_TOKEN_BAD_ID_TOKEN = `
 
 exports.CODE_KEYS_INVALID_URL = `
       The /authorization-code/callback endpoint should make a request to
-      /oauth2/v1/keys to get the public key used to validate the id_token
+      /oauth2/default/v1/keys to get the public key used to validate the id_token
       signature.
 
       Read more about validating id_tokens here:
@@ -185,7 +193,7 @@ exports.CODE_TOKEN_INVALID_ALG = `
       the id_token header is invalid.
 
       When verifying the id_token signature, use the algorithm for the kid
-      specified in the /oauth2/v1/keys response. Do not trust the id_token
+      specified in the /oauth2/default/v1/keys response. Do not trust the id_token
       header algorithm!
 
       Quick exploit - Swap an id_token header with alg: none
@@ -193,12 +201,12 @@ exports.CODE_TOKEN_INVALID_ALG = `
 
 exports.CODE_KEYS_CACHE = `
       The /authorization-code/callback endpoint should cache requests to
-      /oauth2/v1/keys.
+      /oauth2/default/v1/keys.
 
       Pseudo Code:
       1. Make token request
       2. Extract kid from id_token header
-      3. If kid does not exist in cache, make /oauth2/v1/keys request. Cache
+      3. If kid does not exist in cache, make /oauth2/default/v1/keys request. Cache
          this response.
 `;
 
