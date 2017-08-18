@@ -13,12 +13,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Oidc {
 
     private String oktaUrl;
+    private String issuer;
     private String clientId;
     private String clientSecret;
     private String redirectUri;
 
     public String getOktaUrl() {return oktaUrl;}
     public void setOktaUrl(String oktaUrl) {this.oktaUrl = oktaUrl;}
+    
+    public String getIssuer() {return issuer;}
+    public void setIssuer(String issuer) {this.issuer = issuer;}
 
     public String getClientId() {return clientId;}
     public void setClientId(String clientId) {this.clientId = clientId;}

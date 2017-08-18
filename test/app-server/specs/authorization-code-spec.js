@@ -51,7 +51,7 @@ function createIdToken(opts, kid) {
       name: 'John Adams',
       email: 'john@acme.com',
       ver: 1,
-      iss: 'http://127.0.0.1:7777',
+      iss: 'http://127.0.0.1:7777/oauth2/default',
       aud: config.oidc.clientId,
       iat: 1478388232,
       exp: Math.floor(new Date().getTime() / 1000) + 3600,
@@ -83,10 +83,10 @@ function mockOktaRequests(options) {
   const reqs = [];
   const kid = options.kid || `KID_${randomKid()}`;
 
-  // 1. /oauth2/v1/token
+  // 1. /oauth2/default/v1/token
   const req = options.req || {};
   if (!req.url) {
-    req.url = '/oauth2/v1/token' +
+    req.url = '/oauth2/default/v1/token' +
       '?grant_type=authorization_code' +
       '&code=SOME_CODE' +
       '&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauthorization-code%2Fcallback';
@@ -101,9 +101,9 @@ function mockOktaRequests(options) {
   merge(res, options.res);
   reqs.push({ req, res });
 
-  // 2. /oauth2/v1/keys
+  // 2. /oauth2/default/v1/keys
   if (!options.cachedKeyRequest) {
-    const keyReq = { url: '/oauth2/v1/keys' };
+    const keyReq = { url: '/oauth2/default/v1/keys' };
     const keyRes = { keys: [options.publicJwk || keys1.publicJwk] };
     keyRes.keys[0].kid = kid;
     reqs.push({ req: keyReq, res: keyRes, optional: options.keysOptional });
@@ -153,7 +153,7 @@ describe('Authorization Code', () => {
       });
     });
 
-    describe('Getting id_token via /oauth2/v1/token', () => {
+    describe('Getting id_token via /oauth2/default/v1/token', () => {
       it('constructs the /token request with the correct query params', () => {
         const mock = { keysOptional: true };
         const req = mockOktaRequests(mock).then(validateCallback);
@@ -196,6 +196,13 @@ describe('Authorization Code', () => {
         const req = mockOktaRequests(mock).then(validateCallback);
         return util.shouldNotError(req, errors.CODE_TOKEN_INVALID_HEADER_CONNECTION);
       });
+
+      it('sets the "content-length" header to "0"', () => {
+        const mock = util.expand('req.headers.content-length', '0');
+        mock.keysOptional = true;
+        const req = mockOktaRequests(mock).then(validateCallback);
+        return util.shouldNotError(req, errors.CODE_TOKEN_INVALID_HEADER_CONTENT_LENGTH);
+      });
     });
 
     describe('Redirecting to profile on successful token response', () => {
@@ -206,7 +213,7 @@ describe('Authorization Code', () => {
       });
     });
 
-    describe('Validating /oauth2/v1/token response', () => {
+    describe('Validating /oauth2/default/v1/token response', () => {
       describe('General', () => {
         it('returns 401 if there is an error in the response', () => {
           const mock = { req: { thisExpectedHeader: 'does_not_exist' }, keysOptional: true };
@@ -230,7 +237,7 @@ describe('Authorization Code', () => {
         });
       });
       describe('Signature', () => {
-        it('makes a request to /oauth2/v1/keys to fetch the public keys', () => {
+        it('makes a request to /oauth2/default/v1/keys to fetch the public keys', () => {
           const req = mockOktaRequests({}).then(validateCallback);
           return util.shouldNotError(req, errors.CODE_KEYS_INVALID_URL);
         });
@@ -249,7 +256,7 @@ describe('Authorization Code', () => {
           const req = mockOktaRequests(mock).then(validateCallback);
           return util.should401(req, errors.CODE_TOKEN_INVALID_ALG);
         });
-        it('caches responses to /oauth2/v1/keys', () => {
+        it('caches responses to /oauth2/default/v1/keys', () => {
           const kid1 = randomKid();
           const kid2 = randomKid();
           const withFirstKid1 = () => (

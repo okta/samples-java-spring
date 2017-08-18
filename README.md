@@ -68,16 +68,24 @@ By default, this application uses a mock authorization server which responds to 
 
 To start the mock server, run the following in a second terminal window:
 ```bash
-# Starts the mock Okta server at http://127.0.0.01:7777
+# Starts the mock Okta server at http://127.0.0.1:7777
 [samples-java-spring-mvc]$ npm run mock-okta
 ```
 
-If you'd like to test this sample against your own Okta org, follow [these steps to setup an OpenID Connect app](docs/assets/oidc-app-setup.md). Then, replace the *oidc* settings in `samples.config.json` to point to your new app:
+If you'd like to test this sample against your own Okta org, navigate to the Okta Developer Dashboard and follow these steps:
+
+1. Create a new **Web** application by selecting **Create New Application** from the *Applications* page.		
+2. After accepting the default configuration, select **Create Application** to redirect back to the *General Settings* of your application.		
+3. Copy the **Client ID** and **Client Secret**, as it will be needed for the client configuration.
+4. Finally, navigate to `https://{yourOktaDomain}.com/oauth2/default` to see if the [Default Authorization Server](https://developer.okta.com/docs/api/resources/oauth2.html#using-the-default-authorization-server) is setup. If not, [let us know](mailto:developers@okta.com).
+
+Then, replace the *oidc* settings in `.samples.config.json` to point to your new app:
 ```javascript
 // .samples.config.json
 {
   "oidc": {
-    "oktaUrl": "https://{{yourOktaOrg}}.oktapreview.com",
+    "oktaUrl": "https://{{yourOktaDomain}}.com",
+    "issuer": "https://{{yourOktaDomain}}.com/oauth2/default",
     "clientId": "{{yourClientId}}",
     "clientSecret": "{{yourClientSecret}}",
     "redirectUri": "http://localhost:3000/authorization-code/callback"
@@ -103,6 +111,7 @@ class LoginRedirectController {
    $onInit() {
     this.authClient = new OktaAuth({
       url: this.config.oktaUrl,
+      issuer: this.config.issuer,
       clientId: this.config.clientId,
       redirectUri: this.config.redirectUri,
       scopes: ['openid', 'email', 'profile'],
@@ -122,7 +131,6 @@ There are a number of different ways to construct the login redirect URL.
 3. Use [AuthJS](http://developer.okta.com/code/javascript/okta_auth_sdk)
 
 In this sample, we use AuthJS to create the URL and perform the redirect. An `OktaAuth` object is instantiated with the configuration in `.samples.config.json`. When the `login()` function is called from the view, it calls the [`/authorize`](http://developer.okta.com/docs/api/resources/oauth2.html#authentication-request) endpoint to start the [Authorization Code Flow](https://tools.ietf.org/html/rfc6749#section-1.3.1).
- 
 
 You can read more about the `OktaAuth` configuration options here: [OpenID Connect with Okta AuthJS SDK](http://developer.okta.com/code/javascript/okta_auth_sdk#social-authentication-and-openid-connect).
 
@@ -150,6 +158,7 @@ class LoginCustomController {
       clientId: this.config.clientId,
       redirectUri: this.config.redirectUri,
       authParams: {
+        issuer: this.config.issuer,
         responseType: 'code',
         scopes: ['openid', 'email', 'profile'],
       },
@@ -241,7 +250,6 @@ public String callback(@RequestParam("state") String state,
 ### Code Exchange
 Next, we exchange the returned authorization code for an `id_token` and/or `access_token`. You can choose the best [token authentication method](http://developer.okta.com/docs/api/resources/oauth2.html#token-request) for your application. In this sample, we use the default token authentication method `client_secret_basic`:
 
-
 ```java
 // Application.java
 
@@ -290,7 +298,7 @@ ntFBNjluFhNLJIUkEFovEDlfuB4tv_M8BM75celdy3jkpOurg
 ### Validation
 After receiving the `id_token`, we [validate](http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation) the token and its claims to prove its integrity. 
 
-In this sample, we use a [JSON Object Signing and Encryption (JOSE)](https://bitbucket.org/b_c/jose4j/wiki/Home) library to decode and validate the token.
+In this sample, we use the a [JSON Object Signing and Encryption (JOSE)](https://bitbucket.org/b_c/jose4j/wiki/Home) library to decode and validate the token.
 
 There are a couple things we need to verify:
 
@@ -308,7 +316,6 @@ For example:
 - If the `kid` has been cached, use it to validate the signature.
 - If not, make a request to the `jwks_uri`. Cache the new `jwks`, and use the response to validate the signature.
 
-
 ```java
 // Application.java
 
@@ -322,7 +329,7 @@ private Key fetchJwk(String idToken) throws JoseException, IOException, Exceptio
         return CACHED_KEYS.get(keyID);
     }
 
-    String jwksUri = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/keys";
+    String jwksUri = CONFIG.getOktaSample().getOidc().getIssuer() + "/v1/keys";
     HttpsJwks httpJkws = new HttpsJwks(jwksUri);
 
     for (JsonWebKey key : httpJkws.getJsonWebKeys()) {
@@ -338,7 +345,6 @@ private Key fetchJwk(String idToken) throws JoseException, IOException, Exceptio
     return CACHED_KEYS.get(keyID);
 }
 ```
-
 
 #### Verify fields
 
@@ -361,7 +367,7 @@ private Map validateToken(String idToken, String nonce) throws Exception {
             .setRequireExpirationTime()
             .setAllowedClockSkewInSeconds(clock_skew)
             .setExpectedAudience(CONFIG.getOidc().getClientId())
-            .setExpectedIssuer(CONFIG.getOidc().getOktaUrl())
+            .setExpectedIssuer(CONFIG.getOidc().getIssuer())
             .setVerificationKey(key)
             .build();
 
@@ -370,7 +376,6 @@ private Map validateToken(String idToken, String nonce) throws Exception {
 
 }
 ```
-
 
 #### Verify issued time
 The `iat` value indicates what time the token was "issued at". We verify that this claim is valid by checking that the token was not issued in the future, with some leeway for clock skew.
@@ -421,17 +426,18 @@ In Spring MVC, you can clear the the user session by:
 // Application.java
 
 public String logout(HttpServletRequest request) {
-        request.getSession().invalidate();
-        user = new User();
-        return "redirect:/";
-    }
+    request.getSession().invalidate();
+    user = new User();
+    return "redirect:/";
+}
 ```
+
 The Okta session is terminated in our client-side code.
 
 ## Conclusion
 You have now successfully authenticated with Okta! Now what? With a user's `id_token`, you have basic claims into the user's identity. You can extend the set of claims by modifying the `response_type` and `scopes` to retrieve custom information about the user. This includes `locale`, `address`, `phone_number`, `groups`, and [more](http://developer.okta.com/docs/api/resources/oidc.html#scopes).
 
-## Support 
+## Support
 
 Have a question or see a bug? Email developers@okta.com. For feature requests, feel free to open an issue on this repo. If you find a security vulnerability, please follow our [Vulnerability Reporting Process](https://www.okta.com/vulnerability-reporting-policy/).
 
@@ -442,4 +448,3 @@ Copyright 2017 Okta, Inc. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-

@@ -120,7 +120,7 @@ public class Application {
             return send401(response, e.getMessage());
         }
 
-        String tokenEndpoint = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/token?";
+        String tokenEndpoint = CONFIG.getOktaSample().getOidc().getIssuer() + "/v1/token?";
         String clientId = CONFIG.getOktaSample().getOidc().getClientId();
         String clientSecret = CONFIG.getOktaSample().getOidc().getClientSecret();
         byte[] encodedAuth = Base64.encodeBase64((clientId + ":" + clientSecret).getBytes());
@@ -202,7 +202,7 @@ public class Application {
                 .setRequireExpirationTime()
                 .setAllowedClockSkewInSeconds(clock_skew)
                 .setExpectedAudience(CONFIG.getOktaSample().getOidc().getClientId())
-                .setExpectedIssuer(CONFIG.getOktaSample().getOidc().getOktaUrl())
+                .setExpectedIssuer(CONFIG.getOktaSample().getOidc().getIssuer())
                 .setVerificationKey(key)
                 .build();
 
@@ -245,7 +245,7 @@ public class Application {
             return CACHED_KEYS.get(keyID);
         }
 
-        String jwksUri = CONFIG.getOktaSample().getOidc().getOktaUrl() + "/oauth2/v1/keys";
+        String jwksUri = CONFIG.getOktaSample().getOidc().getIssuer() + "/v1/keys";
         HttpsJwks httpJkws = new HttpsJwks(jwksUri);
 
         for (JsonWebKey key : httpJkws.getJsonWebKeys()) {

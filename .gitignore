@@ -6,8 +6,7 @@ travis_phantomjs
 .DS_Store
 .vscode
 
-
-public/
+public
 
 # Intellij
 .idea/
@@ -17,5 +16,6 @@ public/
 # Maven
 .classpath
 .project
-.settings/
-target/
+.settings
+target
+lib/src/main/resources/public/assets
