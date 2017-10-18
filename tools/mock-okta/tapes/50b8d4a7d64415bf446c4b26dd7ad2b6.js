@@ -7,11 +7,11 @@ var path = require("path");
  * connection: keep-alive
  * accept: * / *
  * x-okta-xsrftoken: 
- * user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:48.0) Gecko/20100101 Firefox/48.0
  * x-requested-with: XMLHttpRequest
+ * user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:48.0) Gecko/20100101 Firefox/48.0
  * accept-encoding: gzip
  * accept-language: en-US
- * cookie: DT=DI09dwIAl6ESbSY9ZSYutykqA; t=default; JSESSIONID=69C1B054FE222DF6D4657F037DB1CFFF
+ * cookie: DT=DI0w-VAje2vRb66PZPvGaKpug; t=default; JSESSIONID=C245B854C7006EE672A30A43AAD4E5CF
  * cache-control: no-cache, no-store
  * pragma: no-cache
  */
@@ -20,12 +20,12 @@ module.exports = function (req, res) {
   res.statusCode = 200;
 
   res.setHeader("server", "Apache-Coyote/1.1");
-  res.setHeader("x-okta-request-id", "requA32mVv7RS6_P_opo56Oug");
+  res.setHeader("x-okta-request-id", "reqtqfuJwicT66xMZWL3lLaTw");
   res.setHeader("p3p", "CP=\"HONK\"");
-  res.setHeader("set-cookie", ["sid=\"\"; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/","t=default; Path=/","sid=\"\"; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/","JSESSIONID=69C1B054FE222DF6D4657F037DB1CFFF; Path=/"]);
+  res.setHeader("set-cookie", ["sid=\"\"; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/","t=default; Path=/","sid=\"\"; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/","JSESSIONID=C245B854C7006EE672A30A43AAD4E5CF; Path=/"]);
   res.setHeader("x-rate-limit-limit", "10000");
   res.setHeader("x-rate-limit-remaining", "9998");
-  res.setHeader("x-rate-limit-reset", "1502406948");
+  res.setHeader("x-rate-limit-reset", "1508203657");
   res.setHeader("cache-control", "no-cache, no-store");
   res.setHeader("pragma", "no-cache");
   res.setHeader("expires", "0");
@@ -34,7 +34,7 @@ module.exports = function (req, res) {
   res.setHeader("content-type", "application/json;charset=utf-8");
   res.setHeader("content-language", "en");
   res.setHeader("content-length", "79");
-  res.setHeader("date", "Thu, 10 Aug 2017 23:14:49 GMT");
+  res.setHeader("date", "Tue, 17 Oct 2017 01:26:40 GMT");
 
   res.setHeader("x-yakbak-tape", path.basename(__filename, ".js"));
 
