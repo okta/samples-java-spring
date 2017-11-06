@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Support](https://img.shields.io/badge/support-Developer%20Forum-blue.svg)](https://devforum.okta.com/)
 
-**NOTE:** We are in the process of revamping how this example is structured, until then take a look at our [quickstart guide](https://developer.okta.com/quickstart/#/okta-sign-in-page/java/spring) [this example](https://github.com/okta/okta-spring-boot/tree/master/examples/redirect-code-flow).
+**NOTE:** We are in the process of revamping how this example is structured, until then take a look at our [quickstart guide](https://developer.okta.com/quickstart/#/okta-sign-in-page/java/spring) or [this example](https://github.com/okta/okta-spring-boot/tree/master/examples/redirect-code-flow).
 
 # AngularJS 1.x and Spring MVC Sample Application
 
