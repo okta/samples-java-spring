@@ -1,9 +1,6 @@
 {
   "name": "@okta/samples-java-spring-mvc",
   "version": "1.0.0-SNAPSHOT",
-  "publishConfig": {
-    "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/okta/samples-java-spring-mvc.git"
