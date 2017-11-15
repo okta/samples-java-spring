@@ -1,9 +1,9 @@
 {
   "oktaSample": {
     "oidc": {
-      "oktaUrl": "http://127.0.0.1:7777",
-      "issuer": "http://127.0.0.1:7777/oauth2/default",
-      "clientId": "0oaom8GeLzZeX7oYZ0g3",
+      "oktaUrl": "https://vanbeektech.okta.com",
+      "issuer": "https://vanbeektech.okta.com",
+      "clientId": "0oa43ju51wQSUcS6b1t7",
       "clientSecret": "XIZPoGtuyhu0V8MsQzGOsOSn6oSff3vO8Vp2nmLY",
       "redirectUri": "http://localhost:3000/authorization-code/callback"
     },
