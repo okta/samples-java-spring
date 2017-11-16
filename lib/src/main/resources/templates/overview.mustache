@@ -203,16 +203,7 @@
        clientId: '{{config.oidc.clientId}}',
        redirectUri: '{{{config.oidc.redirectUri}}}'
      };
-
-     {{#user}}
-     options.user = {
-       email: '{{user.email}}',
-       iss: '{{user.claims.iss}}',
-       iat: {{user.claims.iat}},
-       exp: {{user.claims.exp}}
-     };
-     {{/user}}
-
+     
      doc.initDoc();
      bundle.bootstrap(options);
     </script>

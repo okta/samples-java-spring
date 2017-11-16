@@ -16,6 +16,7 @@ public class MockOkta {
     private String proxy;
     private String proxied;
     private String cdn;
+    private String state;
 
     public Integer getPort() {return port;}
     public void setPort(Integer port) {this.port = port;}
@@ -28,4 +29,7 @@ public class MockOkta {
 
     public String getCdn() {return cdn;}
     public void setCdn(String cdn) {this.cdn = cdn;}
+
+    public String getState() {return state;}
+    public void setState(String state) {this.state = state;}
 }
