@@ -2,3 +2,5 @@ security:
   oauth2:
     sso:
       loginPath: /authorization-code/callback
+    client:
+      clientAuthenticationScheme: header
