@@ -24,7 +24,7 @@ mvn -Dokta.oauth2.issuer=https://dev-123456.oktapreview.com/oauth2/default \
 
 **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead update the projects `application.yml`
 
-Browse to: [http://localhost:8080/] to login!
+Browse to: `http://localhost:8080/` to login!
 
 
 ### `custom-login`
@@ -38,7 +38,7 @@ mvn -Dokta.oauth2.issuer=https://dev-123456.oktapreview.com/oauth2/default \
 
 **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead update the projects `application.yml`
 
-Browse to: [http://localhost:8080/] to login!
+Browse to: `http://localhost:8080/` to login!
 
 ### `resource-server`
 
@@ -73,4 +73,4 @@ cd front-end
 mvn
 ```
 
-Browse to: [http://localhost:8080/] to login!
+Browse to: `http://localhost:8080/` to login!
