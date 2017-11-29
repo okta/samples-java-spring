@@ -30,7 +30,7 @@ Browse to: [http://localhost:8080/] to login!
 ### `custom-login`
 
 ```bash
-cd basic
+cd custom-login
 mvn -Dokta.oauth2.issuer=https://dev-123456.oktapreview.com/oauth2/default \
     -Dokta.oauth2.clientId=YourClientId \
     -Dokta.oauth2.clientSecret=YourClientSecret
@@ -52,7 +52,7 @@ mvn -Dokta.oauth2.issuer=https://dev-123456.oktapreview.com/oauth2/default
 
 front-end:
 
-This project is just serving a static `index.html` so you WILL need to update the configuration in that file, see line 53:
+This project is just serving a static [`index.html`](front-end/src/main/resources/static/index.html) so you WILL need to update the configuration in that file, see line 53:
 
 ```javascript
 const data = {
