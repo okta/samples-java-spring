@@ -1,0 +1,49 @@
+{
+    "name": "@okta/samples-java-spring-mvc",
+    "version": "0.0.2",
+    "publishConfig": {
+        "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/okta/samples-java-spring-mvc.git"
+    },
+    "bugs": "https://github.com/okta/samples-java-spring-mvc/issues",
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/okta/samples-java-spring-mvc",
+    "scripts": {
+        "test:basic": "webdriver-manager update && protractor basic/src/test/e2e/conf.js",
+        "test:resource-server": "webdriver-manager update && protractor resource-server/src/test/e2e/conf.js",
+        "mock-okta": "node tools/mock-okta",
+        "mock-okta:debug": "DEBUG=mock-okta npm run mock-okta",
+        "wrap": "node tools/wrap-dependencies",
+        "test": "npm run test:basic",
+        "basic-server": "mvn -f basic/pom.xml -Dokta.oauth2.issuer=https://samples-test.oktapreview.com/oauth2/default -Dokta.oauth2.clientId=0oad5983foWn2Gefr0h7 -Dokta.oauth2.clientSecret=$CLIENT_SECRET",
+        "resource-server": "mvn -f resource-server/pom.xml -Dokta.oauth2.issuer=https://samples-test.oktapreview.com/oauth2/default",
+        "front-end-server": "mvn -f front-end/pom.xml"
+    },
+    "devDependencies": {
+        "chalk": "1.1.3",
+        "cli-table2": "0.2.0",
+        "connect": "3.5.0",
+        "diff": "3.0.1",
+        "forever-monitor": "1.7.1",
+        "jasmine-reporters": "2.2.0",
+        "jws": "3.1.4",
+        "minimist": "1.2.0",
+        "protractor": "4.0.4",
+        "wait-on": "2.0.2",
+        "yakbak": "2.5.0"
+    },
+    "dependencies": {
+        "@okta/samples-js-angular-1": "1.9.0",
+        "body-parser": "^1.18.2",
+        "chai": "3.5.0",
+        "chai-files": "1.4.0",
+        "chai-http": "3.0.0",
+        "lodash.merge": "4.6.0",
+        "mocha": "3.1.2",
+        "pem-jwk": "1.5.1",
+        "oidc-token-hash": "^1.0.0"
+    }
+}
