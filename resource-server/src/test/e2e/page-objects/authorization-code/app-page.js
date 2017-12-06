@@ -22,7 +22,7 @@ class AppPage {
   }
 
   waitForPageLoad() {
-    return util.wait(this.$$td);
+    return util.wait(this.$$claims);
   }
 
   logout() {

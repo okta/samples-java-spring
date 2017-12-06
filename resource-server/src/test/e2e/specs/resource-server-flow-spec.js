@@ -33,11 +33,10 @@ describe('Resource Server Flows', () => {
     oktaSignInPage.waitForPageLoad();
   });
 
-  it('can access the protected resource after logging in', () => {
-    oktaSignInPage.login('george', 'Asdf1234').then(() => {
-      app.waitForPageLoad();
-      expect(app.containsClaim('api://default')).toBe(true);
-    });
+  it('can access the protected resource after logging in', async () => {
+    await oktaSignInPage.login('george', 'Asdf1234');
+    app.waitForPageLoad();
+    expect(app.containsClaim('george@acme.com')).toBe(true);
+    expect(app.containsClaim('api://default')).toBe(true);
   });
 });
-

@@ -14,12 +14,9 @@
     "scripts": {
         "test:basic": "webdriver-manager update && protractor basic/src/test/e2e/conf.js",
         "test:resource-server": "webdriver-manager update && protractor resource-server/src/test/e2e/conf.js",
-        "mock-okta": "node tools/mock-okta",
-        "mock-okta:debug": "DEBUG=mock-okta npm run mock-okta",
-        "wrap": "node tools/wrap-dependencies",
         "test": "npm run test:basic",
-        "basic-server": "mvn -f basic/pom.xml -Dokta.oauth2.issuer=https://samples-test.oktapreview.com/oauth2/default -Dokta.oauth2.clientId=0oad5983foWn2Gefr0h7 -Dokta.oauth2.clientSecret=$CLIENT_SECRET",
-        "resource-server": "mvn -f resource-server/pom.xml -Dokta.oauth2.issuer=https://samples-test.oktapreview.com/oauth2/default",
+        "basic-server": "mvn -f basic/pom.xml -Dokta.oauth2.issuer=$ORG_URL/oauth2/default -Dokta.oauth2.clientId=$CLIENT_ID -Dokta.oauth2.clientSecret=$CLIENT_SECRET",
+        "resource-server": "mvn -f resource-server/pom.xml -Dokta.oauth2.issuer=$ORG_URL/oauth2/default",
         "front-end-server": "mvn -f front-end/pom.xml"
     },
     "devDependencies": {
@@ -31,19 +28,16 @@
         "jasmine-reporters": "2.2.0",
         "jws": "3.1.4",
         "minimist": "1.2.0",
-        "protractor": "4.0.4",
-        "wait-on": "2.0.2",
-        "yakbak": "2.5.0"
+        "protractor": "5.2.0",
+        "wait-on": "2.0.2"
     },
     "dependencies": {
-        "@okta/samples-js-angular-1": "1.9.0",
         "body-parser": "^1.18.2",
         "chai": "3.5.0",
         "chai-files": "1.4.0",
         "chai-http": "3.0.0",
         "lodash.merge": "4.6.0",
         "mocha": "3.1.2",
-        "pem-jwk": "1.5.1",
-        "oidc-token-hash": "^1.0.0"
+        "pem-jwk": "1.5.1"
     }
 }

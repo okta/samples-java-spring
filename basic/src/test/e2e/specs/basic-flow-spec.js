@@ -33,13 +33,11 @@ describe('Authorization Code Flows', () => {
     loggedOutPage.waitForPageLoad();
     expect(loggedOutPage.getLoggedOutHeaderText()).toBe("You have been logged out.");
   });
-
-  it('can login with Okta as the IDP', () => {
-    oktaSignInPage.login('george', 'Asdf1234').then(() => {
-      app.waitForPageLoad();
-      expect(app.containsClaim('george@acme.com')).toBe(true);
-      expect(app.containsClaim('api://default')).toBe(true);
-    });
+ 
+  it('can login with Okta as the IDP', async () => {
+    await oktaSignInPage.login('george', 'Asdf1234');
+    app.waitForPageLoad();
+    expect(app.containsClaim('george@acme.com')).toBe(true);
+    expect(app.containsClaim('api://default')).toBe(true);
   });
 });
-

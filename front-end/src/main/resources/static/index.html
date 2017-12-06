@@ -50,13 +50,13 @@
 
     const resourceServerBaseUrl = "http://localhost:8000/";
 
-    // Replace this section with your org details if needed
+    // Replace this section with your org details (baseUrl, clientId, issuer)
     const data = {
-      baseUrl: 'https://samples-test.oktapreview.com',
-      clientId: '0oad5a19u0IVnKU1g0h7',
+      baseUrl: 'https://dev-123456.oktapreview.com',
+      clientId: 'YourClientId',
       redirectUri: 'http://localhost:8080',
       authParams: {
-        issuer: 'https://samples-test.oktapreview.com/oauth2/default',
+        issuer: 'https://dev-123456.oktapreview.com/oauth2/default',
         responseType: ['id_token', 'token'],
         scopes: ["openid", "profile", "email"]
       }

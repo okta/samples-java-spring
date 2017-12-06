@@ -36,7 +36,6 @@ class OktaSignInPage {
     this.passwordInput.sendKeys(password);
     return this.submitButton.click();
   }
-
 }
 
 module.exports = OktaSignInPage;
