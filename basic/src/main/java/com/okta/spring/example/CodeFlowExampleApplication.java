@@ -43,7 +43,7 @@ public class CodeFlowExampleApplication {
 	 * to change that.  The easiest way to do this is by both extending from {@link OAuth2SsoDefaultConfiguration} and
 	 * annotating your implementation with {@link EnableOAuth2Sso}.
 	 */
-	@Configuration
+    @Configuration
     @EnableOAuth2Sso
 	static class ExampleSecurityConfigurerAdapter extends OAuth2SsoDefaultConfiguration {
 
@@ -53,9 +53,15 @@ public class CodeFlowExampleApplication {
 
         @Override
 		protected void configure(HttpSecurity http) throws Exception {
-        	super.configure(http);
+
+        	// In this example we allow anonymous access to the root index page
+			// this MUST be configured before calling super.configure
+            http.authorizeRequests().antMatchers("/").permitAll();
+
+            // calling super.configure locks everything else down
+			super.configure(http);
         	// after calling super, you can change the logout success url
-            http.logout().logoutSuccessUrl("/post-logout").permitAll();
+			http.logout().logoutSuccessUrl("/");
 		}
 	}
 
@@ -67,14 +73,14 @@ public class CodeFlowExampleApplication {
 	public class ExampleController {
 
 		@GetMapping("/")
-		@PreAuthorize("#oauth2.hasScope('email')")
-		public ModelAndView userDetails(OAuth2Authentication authentication) {
-			return new ModelAndView("userProfile" , Collections.singletonMap("details", authentication.getUserAuthentication().getDetails()));
+		public String home() {
+			return "home";
 		}
 
-		@GetMapping("/post-logout")
-		public String logout() {
-			return "logout";
+		@GetMapping("/profile")
+		@PreAuthorize("#oauth2.hasScope('profile')")
+		public ModelAndView userDetails(OAuth2Authentication authentication) {
+			return new ModelAndView("userProfile" , Collections.singletonMap("details", authentication.getUserAuthentication().getDetails()));
 		}
 	}
 }

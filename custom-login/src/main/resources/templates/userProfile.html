@@ -18,25 +18,32 @@
     <title>User Details</title>
     <!--/*/ <th:block th:include="head :: head"/> /*/-->
 </head>
-<body>
-  <div id="container">
+<body id="samples">
+  <div th:replace="menu :: menu"></div>
+
+    <div id="content" class="container">
+
+      <div>
+        <h2>My Profile</h2>
+        <p>Hello, <span th:text="${#authentication.name}">Joe Coder</span>. Below is the information that was read with your <a href="https://developer.okta.com/docs/api/resources/oidc.html#get-user-information">Access Token</a>.
+        </p>
+        <p>This route is protected with the annotation <code>@PreAuthorize("#oauth2.hasScope('profile')")</code>, which will ensure that this page cannot be accessed until you have authenticated, and have the scope <code>profile</code>.</p>
+      </div>
+
       <table class="table table-striped">
-          <thead>
+        <thead>
           <tr>
-              <td>Key</td>
-              <td>Value</td>
+            <th>Claim</th>
+            <th>Value</th>
           </tr>
-          </thead>
-          <tbody>
-              <tr th:each="item : ${details}">
-                  <td th:text="${item.key}">Key</td>
-                  <td th:text="${item.value}">Value</td>
-              </tr>
-          </tbody>
+        </thead>
+        <tbody>
+          <tr th:each="item : ${details}">
+                <td th:text="${item.key}">Key</td>
+                <td th:id="${'claim-' + item.key}" th:text="${item.value}">Value</td>
+            </tr>
+        </tbody>
       </table>
-      <form th:action="@{/logout}" method="post">
-          <input type="submit" class="btn btn-danger" value="Logout"/>
-      </form>
-  </div>
-</body>
+    </div>
+  </body>
 </html>

@@ -1,11 +1,11 @@
+server:
+  port: 8080
 okta:
   oauth2:
-    redirectUri: /login/okta
+    redirectUri: /authorization-code/callback
 
 security:
   oauth2:
     client:
       # Redirect to your local page and render the widget
-      userAuthorizationUri: http://localhost:8080/login
-#    sso:
-#      loginPath: /authorization-code/callback
+      userAuthorizationUri: http://localhost:${server.port}/login

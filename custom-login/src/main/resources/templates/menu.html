@@ -1,0 +1,34 @@
+<!--
+  ~ Copyright 2018 Okta, Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body id="samples">
+
+    <nav class="navbar navbar-default"  th:fragment="menu">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a id="profile-button" th:href="@{/profile}" th:if="${#authorization.expression('isAuthenticated()')}">My Profile</a></li>
+        </ul>
+        <form method="post" th:action="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}" class="navbar-form navbar-right">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button id="logout-button" type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </div>
+    </nav>
+
+</body>
+</html>

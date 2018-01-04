@@ -14,18 +14,10 @@
 # limitations under the License.
 #
 scenarios:
-  code-flow-local-validation:
-    enabled: false
-
-  code-flow-remote-validation:
-    enabled: false
-
-  oidc-code-flow-local-validation:
-    enabled: false
-
   implicit-flow-local-validation:
     disabledTests:
     - scopeAccessTest
+    - inactiveAccessTokenTest
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}

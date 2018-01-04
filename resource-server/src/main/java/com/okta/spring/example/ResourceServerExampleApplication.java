@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @EnableResourceServer
@@ -49,12 +54,35 @@ public class ResourceServerExampleApplication {
 	}
 
 	@RestController
+	@CrossOrigin(origins = "http://localhost:8080")
 	public class MessageOfTheDayController {
-		@GetMapping("/")
-		@PreAuthorize("#oauth2.hasScope('email')")
-		@CrossOrigin(origins = "http://localhost:8080")
+
+		@GetMapping("/api/userProfile")
+		@PreAuthorize("#oauth2.hasScope('profile')")
 		public Map<String, Object> getUserDetails(OAuth2Authentication authentication) {
 			return (Map<String, Object>) authentication.getUserAuthentication().getDetails();
+		}
+
+		@GetMapping("/api/messages")
+		@PreAuthorize("#oauth2.hasScope('email')")
+		public Map<String, Object> messages() {
+
+			Map<String, Object> result = new HashMap<>();
+			result.put("messages", Arrays.asList(
+					new Message("I am a robot."),
+					new Message("Hello, word!")
+			));
+
+			return result;
+		}
+	}
+
+	class Message {
+		public Date date = new Date();
+		public String text;
+
+		Message(String text) {
+			this.text = text;
 		}
 	}
 }
