@@ -1,5 +1,5 @@
 #
-# Copyright 2017 Okta, Inc.
+# Copyright 2018 Okta, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
 # limitations under the License.
 #
 scenarios:
-  code-flow-local-validation:
+  custom-code-flow-local-validation:
     disabledTests:
     - respondWithCode
+    - invalidSignatureAccessTokenJwtTest
+    - noAuthCodeTest
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}
@@ -26,7 +28,7 @@ scenarios:
     - -Dserver.session.trackingModes=cookie
     - --batch-mode
 
-  code-flow-remote-validation:
+  custom-code-flow-remote-validation:
     disabledTests:
     - respondWithCode
     command: ./mvnw

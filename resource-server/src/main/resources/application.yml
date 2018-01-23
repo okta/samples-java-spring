@@ -1,2 +1,7 @@
 server:
   port: 8000
+
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false

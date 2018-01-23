@@ -17,9 +17,15 @@
 <head>
     <title>Login</title>
     <!--/*/ <th:block th:include="head :: head"/> /*/-->
+
+    <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="/okta/okta.css" rel="stylesheet" type="text/css"/>
+    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/css/okta-theme.css" type="text/css" rel="stylesheet"/>
+
 </head>
 <body class="login">
-  <div id="okta-login-container"></div>
+  <div id="sign-in-widget"></div>
 
 <script th:inline="javascript">
 /*<![CDATA[*/
@@ -39,7 +45,7 @@ config.authParams = {
 };
 
 new OktaSignIn(config).renderEl(
-  { el: '#okta-login-container' },
+  { el: '#sign-in-widget' },
   function (res) {}
 );
 /*]]>*/

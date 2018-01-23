@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.okta.spring</groupId>
 			<artifactId>okta-spring-boot-starter</artifactId>
-			<version>0.2.0</version>
+            <version>0.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -45,6 +45,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
 		</dependency>
 
 		<dependency>
@@ -68,13 +72,16 @@
 		<dependency>
 			<groupId>com.okta.oidc.tck</groupId>
 			<artifactId>okta-oidc-tck</artifactId>
-			<version>0.2.0</version>
+			<version>0.2.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<defaultGoal>spring-boot:run</defaultGoal>
+
+		<!-- Everything below here is to test this project, you wouldn't need the remaining in your own project -->
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -93,8 +100,73 @@
 					<dependenciesToScan>
 						<dependency>com.okta.oidc.tck:okta-oidc-tck</dependency>
 					</dependenciesToScan>
-					<reuseForks>false</reuseForks>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+					 <id>unpack</id>
+					 <phase>package</phase>
+					 <goals>
+					   <goal>unpack</goal>
+					 </goals>
+					 <configuration>
+						<artifactItems>
+							<artifactItem>
+								<groupId>com.okta.oidc.tck</groupId>
+								<artifactId>okta-oidc-tck</artifactId>
+								<classifier>e2e</classifier>
+								<type>zip</type>
+								<outputDirectory>${project.build.testOutputDirectory}/</outputDirectory>
+							</artifactItem>
+					   </artifactItems>
+					   <overWriteReleases>false</overWriteReleases>
+					   <overWriteSnapshots>true</overWriteSnapshots>
+					 </configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- use the frontend plugin to drive javascript based selenium tests -->
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<nodeVersion>v8.1.2</nodeVersion>
+					<workingDirectory>${project.build.testOutputDirectory}</workingDirectory>
+				</configuration>
+				<executions>
+				 <execution>
+					 <id>install node</id>
+					 <phase>verify</phase>
+					 <goals>
+						 <goal>install-node-and-npm</goal>
+					 </goals>
+				 </execution>
+				 <execution>
+					 <id>npm install</id>
+					 <phase>verify</phase>
+					 <goals>
+						 <goal>npm</goal>
+					 </goals>
+					 <configuration>
+						 <arguments>install</arguments>
+					 </configuration>
+				 </execution>
+				 <execution>
+					 <id>npm test</id>
+					 <phase>verify</phase>
+					 <goals>
+						 <goal>npm</goal>
+					 </goals>
+					 <configuration>
+						 <arguments>test</arguments>
+					 </configuration>
+				 </execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

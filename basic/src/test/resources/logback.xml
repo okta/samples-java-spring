@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2017 Okta, Inc.
+  ~ Copyright 2017 Okta
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -13,15 +14,18 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>User Details</title>
-    <!--/*/ <th:block th:include="head :: head"/> /*/-->
-</head>
-<body>
-  <div id="container">
-      <h1>You have been logged out.</h1>
-      Click <a th:href="@{/}">here</a> to log back in.
-  </div>
-</body>
-</html>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+        ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

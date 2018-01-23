@@ -48,6 +48,10 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 
 import javax.servlet.Filter;
 
+/**
+ * This example renders a custom login page (hosted within this application). You can use a standard login with less
+ * code (if you don't need to customize the login page) see the 'basic' example at the root of this repository.
+ */
 @SpringBootApplication
 @EnableOAuth2Sso
 public class HostedLoginCodeFlowExampleApplication {
@@ -93,6 +97,8 @@ public class HostedLoginCodeFlowExampleApplication {
                                    AuthorizationCodeResourceDetails authorizationCodeResourceDetails,
                                    ResourceServerProperties resourceServerProperties) {
 
+        // There are a few package private classes the configure a OAuth2ClientAuthenticationProcessingFilter, in order
+        // to change how the login redirect works we need to copy a bit of that code here
         OAuth2ClientAuthenticationProcessingFilter oktaFilter = new OAuth2ClientAuthenticationProcessingFilter(oktaOAuth2Properties.getRedirectUri());
         oktaFilter.setApplicationEventPublisher(applicationEventPublisher);
         OAuth2RestTemplate oktaTemplate = new OAuth2RestTemplate(authorizationCodeResourceDetails, oauth2ClientContext);
@@ -125,13 +131,18 @@ public class HostedLoginCodeFlowExampleApplication {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
+                // allow anonymous users to access the root page
+                .authorizeRequests().antMatchers("/").permitAll()
+                .and()
+                // add our SSO Filter in place
                 .addFilterAfter(oktaSsoFilter, AbstractPreAuthenticatedProcessingFilter.class)
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                     .authorizeRequests()
                         .antMatchers(HttpMethod.GET, oktaOAuth2Properties.getRedirectUri()).authenticated()
                 .and()
-                    .logout().logoutSuccessUrl("/post-logout").permitAll();
+                // send the user back to the root page when they logout
+                .logout().logoutSuccessUrl("/");
         }
     }
 }

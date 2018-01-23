@@ -1,5 +1,11 @@
 language: java
 jdk:
 - oraclejdk8
+install:
+- "true"
 script:
 - "mvn install"
+
+
+addons:
+  sauce_connect: true

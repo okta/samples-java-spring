@@ -31,8 +31,11 @@
     <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/css/okta-theme.css" type="text/css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- The widget configuration is in a separate JS file -->
+    <script src="/js/config.js" type="text/javascript"></script>
 
 </head>
 
@@ -40,35 +43,16 @@
 <!-- Render the login widget here -->
 <div id="okta-login-container"></div>
 
-<!-- Render the REST response here -->
-<div id="cool-stuff-here"></div>
+<div class="container">
+    <!-- Render the REST response here -->
+    <div id="api-messages"></div>
+    <div id="api-user-profile"></div>
 
-<!-- And a logout button, hidden by default -->
-<button id="logout" type="button" class="btn btn-danger" style="display:none">Logout</button>
-
+    <!-- And a logout button, hidden by default -->
+    <button id="logout" type="button" class="btn btn-danger" style="display:none">Logout</button>
+</div>
 <script>
 
-    const resourceServerBaseUrl = "http://localhost:8000/";
-
-    const data = {
-      baseUrl: 'https://dev-123456.oktapreview.com',
-      clientId: 'YourClientId',
-      redirectUri: 'http://localhost:8080',
-      authParams: {
-        issuer: 'https://dev-123456.oktapreview.com/oauth2/default',
-        responseType: ['id_token', 'token'],
-        scopes: ["openid", "profile", "email"]
-      }
-    };
-
-    // we want the access token so include 'token'
-    data.authParams.responseType = ['id_token', 'token'];
-    data.redirectUri = window.location.href; // simple single page app
-
-    // setup the widget
-    window.oktaSignIn = new OktaSignIn(data);
-
-    // handle the rest of the page
     doInit();
 
   /**
@@ -76,35 +60,46 @@
    * @param accessToken The access token used for the auth header
    */
   function doAllTheThings(accessToken) {
+    renderApiMessages(accessToken);
+    renderProfileInfo(accessToken);
 
+    // show the logout button
+    $( "#logout" )[0].style.display = 'block';
+  }
+
+  function renderApiMessages(accessToken) {
     // include the Bearer token in the request
     $.ajax({
-      url: resourceServerBaseUrl,
+      url: resourceServerBaseUrl + "/api/messages",
       headers: {
         'Authorization': "Bearer " + accessToken
       },
     }).then(function(data) {
       // Render the message of the day
-
-      let table = `
+      let htmlToRender = `
+            <h1>Messages:
+              <small>` + resourceServerBaseUrl + `/api/messages</small>
+            </h1>
             <table class="table table-striped">
                 <thead>
                   <tr>
-                      <td>Key</td>
-                      <td>Value</td>
+                      <th>Date</th>
+                      <th>Text</th>
                   </tr>
               </thead>
               <tbody>`;
 
-      for (const key of Object.keys(data)) {
-        table += "<tr><td>"+ key +"</td><td>"+ data[key] +"</td></tr>";
+      const messages = data.messages;
+      for (const message of messages) {
+        htmlToRender += "<tr><td>"+ message.date +"</td><td>"+ message.text +"</td></tr>";
       }
 
-      table += `
+      htmlToRender += `
               </tbody>
             </table>`;
 
-      $('#cool-stuff-here').append(table);
+
+      $('#api-messages').append(htmlToRender);
     })
     .fail(function(data) {
       // handle any errors
@@ -112,9 +107,47 @@
       console.log(data.responseJSON.error);
       console.log(data.responseJSON.error_description);
     });
+  }
 
-    // show the logout button
-    $( "#logout" )[0].style.display = 'block';
+   function renderProfileInfo(accessToken) {
+
+    // include the Bearer token in the request
+    $.ajax({
+      url: resourceServerBaseUrl + "/api/userProfile",
+      headers: {
+        'Authorization': "Bearer " + accessToken
+      },
+    }).then(function(data) {
+      // Render the User Profile as seen from the server
+      let htmlToRender = `
+            <h1>User Profile:
+              <small>` + resourceServerBaseUrl + `/api/userProfile</small>
+            </h1>
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                  </tr>
+              </thead>
+              <tbody>`;
+
+      for (const key of Object.keys(data)) {
+        htmlToRender += "<tr><td>"+ key +"</td><td>"+ data[key] +"</td></tr>";
+      }
+
+      htmlToRender += `
+              </tbody>
+            </table>`;
+
+      $('#api-user-profile').append(htmlToRender);
+    })
+    .fail(function(data) {
+      // handle any errors
+      console.log("ERROR!!");
+      console.log(data.responseJSON.error);
+      console.log(data.responseJSON.error_description);
+    });
   }
 
   function doInit() {
