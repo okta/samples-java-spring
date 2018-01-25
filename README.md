@@ -22,6 +22,14 @@ Before running the okta-hosted-login or custom-login examples, you will need the
 
 There is a pom.xml at the root of this project, that exists to build all of the projects.  Each project is independent and could be copied out of this repo as a primer for your own application.
 
+You also need to gather the following information from the Okta Developer Console:
+
+- **Client ID** and **Client Secret** - This can be found on the "General" tab of an application, you want to get this for the Web application that you created earlier.
+
+- **Issuer** - This is the URL of the authorization server that will perform authentication.  All Developer Accounts have a "default" authorization server.  The issuer is a combination of your Org URL (found in the upper right of the console home page) and `/oauth2/default`. For example, `https://dev-1234.oktapreview.com/oauth2/default`.
+
+Plug these values into the `mvn` commands used to start each application.
+
 ### `okta-hosted-login`
 
 The login is achieved through the [Authorization Code Flow], where the user is redirected to the Okta-Hosted login page. After the user authenticates, they are redirected back to the application.
