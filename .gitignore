@@ -19,3 +19,6 @@ public
 .settings
 target
 lib/src/main/resources/public/assets
+okta-hosted-login/src/test/resources/build2
+okta-hosted-login/src/test/resources/node_modules
+okta-hosted-login/src/test/resources/e2e-tests
