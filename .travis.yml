@@ -4,7 +4,7 @@ jdk:
 install:
 - "true"
 script:
-- "mvn install"
+- "mvn install -Pokta-tck"
 
 
 addons:
