@@ -12,34 +12,43 @@ Before running this sample, you will need the following:
 * An Okta Application, configured for Singe-Page App (SPA) mode. This is done from the Okta Developer Console and you can find instructions [here][OIDC SPA Setup Instructions].  When following the wizard, use the default properties.  They are are designed to work with our sample applications.
 * One of our front-end sample applications to demonstrate the interaction with the resource server:
   * [Okta React Sample Apps][]
-  * [Okta Angular Sample Apps][]
+  * [Okta Vue Sample Apps][]
 
 A typical resource-server requires a frontend and a backend application, so you will need to start each process:
+
+## Running This Example
 
 **backend:**
 ```bash
 cd resource-server
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default
 ```
+> **NOTE:** The above command starts the resource server on port 8000. You can browse to `http://localhost:8000` to ensure it has started. If you get the message "Full authentication is required to access this resource", it indicates that the resource server is up. You will need to pass an access token to access the resource, which will be done by the front-end below.
 
 **front-end:**
 
-Instead of using one of our front-end sample applications listed above, you can also use a front-end within this repo to quickly test the resource server.
+Instead of using one of our front-end sample applications listed above, you can also use the [front-end](../front-end) within this repo to quickly test the resource server.
+To start the front-end, you need to gather the following information from the Okta Developer Console:
 
-This project is just serving a static [`index.html`](front-end/src/main/resources/static/index.html) so you WILL need to update the configuration in that file, see line 53:
+- **Client Id** - The client ID of the SPA application that you created earlier. This can be found on the "General" tab of an application, or the list of applications. The resource server will validate that tokens have been minted for this application.
+- **Base URL** - This is the URL of the developer org that you created. For example, `https://dev-1234.oktapreview.com`.
+
+Update the configuration file [`config.js`](/front-end/src/main/resources/static/js/config.js) with the client id and base url that you obtained in the previous step.
 
 ```javascript
-const data = {
+// okta widget configuration
+window.oktaSignIn = new OktaSignIn({
   baseUrl: 'https://{yourOktaDomain}.com',
-  clientId: 'YourClientId',
-  redirectUri: 'http://localhost:8080',
+  clientId: '{yourClientId}',
+  redirectUri: window.location.href,
   authParams: {
-    issuer: 'https://{yourOktaDomain}.com/oauth2/default',
+    issuer: 'default',
     responseType: ['id_token', 'token'],
     scopes: ["openid", "profile", "email"]
   }
-};
+});
 ```
+Now start the front-end.
 
 ```bash
 cd front-end
@@ -48,10 +57,10 @@ mvn
 
 Browse to: `http://localhost:8080/` to login!
 
-> **NOTE:** If you want to use one of our front-end samples, open a new terminal window and run the front-end sample project of your choice (see links in Prerequisites).  Once the front-end sample is running, you can navigate to http://localhost:8080 in your browser and log in to the front-end application.  Once logged in, you can navigate to the "Messages" page to see the interaction with the resource server.
+> **NOTE:** If you want to use one of our front-end samples, open a new terminal window and run the [front-end sample project of your choice](Prerequisites).  Once the front-end sample is running, you can navigate to http://localhost:8080 in your browser and log in to the front-end application.  Once logged in, you can navigate to the "Messages" page to see the interaction with the resource server.
 
 
 [Implicit Flow]: https://developer.okta.com/authentication-guide/implementing-authentication/implicit
-[Okta Angular Sample Apps]: https://github.com/okta/samples-js-angular
+[Okta Vue Sample Apps]: https://github.com/okta/samples-js-vue
 [Okta React Sample Apps]: https://github.com/okta/samples-js-react
 [OIDC SPA Setup Instructions]: https://developer.okta.com/authentication-guide/implementing-authentication/implicit#1-setting-up-your-application
