@@ -1,6 +1,6 @@
-# Okta Spring Security & Custom Login Page Example
+# Okta Spring Security & Okta-Hosted Login Page Example
 
-This example shows you how to use the [Okta Spring Boot Library][] to login a user.  The login is achieved through the [Authorization Code Flow][] using the [Okta Sign In Widget][], which gives you more control to customize the login experience within your app.  After the user authenticates, they are redirected back to the application and a local cookie session is created.
+This example shows you how to use the [Okta Spring Boot Library][] to login a user.  The login is achieved through the [Authorization Code Flow][] where the user is redirected to the Okta-Hosted login page.  After the user authenticates, they are redirected back to the application and a local cookie session is created.
 
 
 ## Prerequisites
@@ -23,7 +23,7 @@ You also need to gather the following information from the Okta Developer Consol
 Plug these values into the `mvn` commands used to start the application.
 
 ```bash
-cd custom-login
+cd okta-hosted-login
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default \
     -Dokta.oauth2.clientId={yourClientId} \
     -Dokta.oauth2.clientSecret={yourClientSecret}
@@ -33,7 +33,7 @@ mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default \
 
 Now navigate to http://localhost:8080 in your browser.
 
-If you see a home page that prompts you to login, then things are working!  Clicking the **Login** button will render a custom login page, served by the Spring Boot application, that uses the [Okta Sign In Widget][] to perform authentication.
+If you see a home page that prompts you to login, then things are working!  Clicking the **Login** button will redirect you to the Okta hosted sign-in page.
 
 You can login with the same account that you created when signing up for your Developer Org, or you can use a known username and password from your Okta Directory.
 
@@ -42,4 +42,3 @@ You can login with the same account that you created when signing up for your De
 [Okta Spring Boot Library]: https://github.com/okta/okta-spring-boot
 [OIDC Web Application Setup Instructions]: https://developer.okta.com/authentication-guide/implementing-authentication/auth-code#1-setting-up-your-application
 [Authorization Code Flow]: https://developer.okta.com/authentication-guide/implementing-authentication/auth-code
-[Okta Sign In Widget]: https://github.com/okta/okta-signin-widget
