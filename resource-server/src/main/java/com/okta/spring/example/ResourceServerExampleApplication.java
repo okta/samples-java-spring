@@ -70,7 +70,7 @@ public class ResourceServerExampleApplication {
             Map<String, Object> result = new HashMap<>();
             result.put("messages", Arrays.asList(
                     new Message("I am a robot."),
-                    new Message("Hello, word!")
+                    new Message("Hello, world!")
             ));
 
             return result;
