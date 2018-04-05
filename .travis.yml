@@ -4,8 +4,7 @@ jdk:
 install:
 - "true"
 script:
-- "mvn install -Pokta-tck"
-
+- "mvn install -Pokta-tck -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
 addons:
   sauce_connect: true
