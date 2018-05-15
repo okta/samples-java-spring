@@ -47,8 +47,8 @@ public class CodeFlowExampleApplication {
     @EnableOAuth2Sso
     static class ExampleSecurityConfigurerAdapter extends OAuth2SsoDefaultConfiguration {
 
-        public ExampleSecurityConfigurerAdapter(ApplicationContext applicationContext, OAuth2SsoProperties sso) {
-            super(applicationContext, sso);
+        public ExampleSecurityConfigurerAdapter(ApplicationContext applicationContext) {
+            super(applicationContext);
         }
 
         @Override

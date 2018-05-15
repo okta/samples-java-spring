@@ -30,6 +30,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -112,6 +113,7 @@ public class HostedLoginCodeFlowExampleApplication {
     }
 
     @Configuration
+    @Order(99) // Must be less then 100 in order to configure before OAuth2SsoDefaultConfiguration
     static class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         private final Filter oktaSsoFilter;

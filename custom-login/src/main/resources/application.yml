@@ -1,7 +1,8 @@
 server:
   port: 8080
-  session:
-    tracking-modes: cookie
+  servlet:
+    session:
+      tracking-modes: cookie
 okta:
   oauth2:
     redirectUri: /authorization-code/callback
