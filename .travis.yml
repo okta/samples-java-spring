@@ -1,11 +1,11 @@
 language: java
+addons:
+  chrome: stable
+  sauce_connect: true
 jdk:
 - oraclejdk8
 install:
 - "true"
 script:
-- "mvn install -Pokta-tck"
-
-
-addons:
-  sauce_connect: true
+- "google-chrome --version"
+- "mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Pokta-tck install"
