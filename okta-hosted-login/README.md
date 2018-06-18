@@ -9,10 +9,16 @@ Before running this sample, you will need the following:
 
 * An Okta Developer Account, you can sign up for one at https://developer.okta.com/signup/.
 * An Okta Application, configured for Web mode. This is done from the Okta Developer Console and you can find instructions [here][OIDC Web Application Setup Instructions].  When following the wizard, use the default properties.  They are designed to work with our sample applications.
+* The source code from this repository:
+
+    ```
+    git clone https://github.com/okta/samples-java-spring.git
+    cd samples-java-spring
+    ```
 
 ## Running This Example
 
-There is a pom.xml at the root of this project, that exists to build all of the projects.  Each project is independent and could be copied out of this repo as a primer for your own application.
+There is a `pom.xml` at the root of this project, that exists to build all of the projects.  Each project is independent and could be copied out of this repo as a primer for your own application.
 
 You also need to gather the following information from the Okta Developer Console:
 
