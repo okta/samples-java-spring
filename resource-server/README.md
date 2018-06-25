@@ -22,7 +22,7 @@ A typical resource-server requires a frontend and a backend application, so you 
 **backend:**
 ```bash
 cd resource-server
-mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default
+mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default
 ```
 > **NOTE:** The above command starts the resource server on port 8000. You can browse to `http://localhost:8000` to ensure it has started. If you get the message "Full authentication is required to access this resource", it indicates that the resource server is up. You will need to pass an access token to access the resource, which will be done by the front-end below.
 
@@ -39,7 +39,7 @@ Update the configuration file [`config.js`](/front-end/src/main/resources/static
 ```javascript
 // okta widget configuration
 window.oktaSignIn = new OktaSignIn({
-  baseUrl: 'https://{yourOktaDomain}.com',
+  baseUrl: 'https://{yourOktaDomain}',
   clientId: '{yourClientId}',
   redirectUri: window.location.href,
   authParams: {

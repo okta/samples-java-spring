@@ -24,7 +24,7 @@ Plug these values into the `mvn` commands used to start the application.
 
 ```bash
 cd custom-login
-mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default \
+mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={yourClientId} \
     -Dokta.oauth2.clientSecret={yourClientSecret}
 ```
