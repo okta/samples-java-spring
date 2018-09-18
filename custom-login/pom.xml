@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>com.okta.oidc.tck</groupId>
 			<artifactId>okta-oidc-tck</artifactId>
-			<version>0.3.1</version>
+			<version>0.4.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -127,15 +127,6 @@
 			<properties>
 				<node.version>v8.1.2</node.version>
 			</properties>
-
-			<dependencies>
-				<dependency>
-					<groupId>com.okta.oidc.tck</groupId>
-					<artifactId>okta-oidc-tck</artifactId>
-					<version>0.3.1</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
 
 			<build>
 				<plugins>
@@ -166,6 +157,7 @@
 							 </goals>
 							 <configuration>
 								<artifactItems>
+									<!-- extract the tck UI tests -->
 									<artifactItem>
 										<groupId>com.okta.oidc.tck</groupId>
 										<artifactId>okta-oidc-tck</artifactId>
@@ -173,9 +165,17 @@
 										<type>zip</type>
 										<outputDirectory>${project.build.testOutputDirectory}/</outputDirectory>
 									</artifactItem>
-							   </artifactItems>
-							   <overWriteReleases>false</overWriteReleases>
-							   <overWriteSnapshots>true</overWriteSnapshots>
+									<!-- extract the tck keystore -->
+									<artifactItem>
+										<groupId>com.okta.oidc.tck</groupId>
+										<artifactId>okta-oidc-tck</artifactId>
+										<outputDirectory>${project.build.directory}</outputDirectory>
+										<destFileName>tck-keystore.jks</destFileName>
+										<includes>tck-keystore.jks</includes>
+									</artifactItem>
+								</artifactItems>
+								<overWriteReleases>false</overWriteReleases>
+								<overWriteSnapshots>true</overWriteSnapshots>
 							 </configuration>
 							</execution>
 						</executions>
