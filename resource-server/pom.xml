@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.2.RELEASE</version>
+		<version>2.0.5.RELEASE</version>
 	</parent>
 
 	<groupId>com.example.okta</groupId>
@@ -27,12 +27,12 @@
 		<dependency>
 			<groupId>com.okta.spring</groupId>
 			<artifactId>okta-spring-boot-starter</artifactId>
-            <version>0.5.0</version>
+            <version>0.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security.oauth.boot</groupId>
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
-			<version>2.0.1.RELEASE</version>
+			<version>2.0.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.okta.oidc.tck</groupId>
 			<artifactId>okta-oidc-tck</artifactId>
-			<version>0.3.1</version>
+			<version>0.4.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -78,8 +78,32 @@
 				</configuration>
 			</plugin>
 
-			<!-- Tell failsafe to run Okta's oidc-tck -->
+			<!-- extract the tck keystore -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+				  <artifactItems>
+					<artifactItem>
+					  <groupId>com.okta.oidc.tck</groupId>
+					  <artifactId>okta-oidc-tck</artifactId>
+					  <outputDirectory>${project.build.directory}</outputDirectory>
+					  <destFileName>tck-keystore.jks</destFileName>
+					  <includes>tck-keystore.jks</includes>
+					</artifactItem>
+				  </artifactItems>
+				</configuration>
+			  </plugin>
+			  <!-- Tell failsafe to run Okta's oidc-tck -->
+			  <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.20.1</version>
@@ -89,6 +113,7 @@
 					</dependenciesToScan>
 					<systemPropertyVariables>
 						<okta.tck.redirectOnError>true</okta.tck.redirectOnError>
+						<javax.net.ssl.trustStore>${project.build.directory}/tck-keystore.jks</javax.net.ssl.trustStore>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
