@@ -24,12 +24,12 @@
     </parent>
 
     <groupId>com.example.okta</groupId>
-    <artifactId>okta-spring-boot-oauth-code-flow-custom-login-example</artifactId>
+    <artifactId>okta-spring-boot-oauth-code-flow-custom-login-osw-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Okta :: Samples :: Spring Boot :: Code Flow + Custom Login Page</name>
-    <description>Okta OAuth 2.0 w/ Spring Boot Example + Custom Login Page</description>
+    <name>Okta :: Samples :: Spring Boot :: Code Flow + Custom Login Page with Okta SignIn Widget</name>
+    <description>Okta OAuth 2.0 w/ Spring Boot Example + Custom Login Page with Okta SignIn Widget</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

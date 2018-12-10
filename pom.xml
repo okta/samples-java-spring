@@ -27,7 +27,8 @@
 
     <modules>
         <module>okta-hosted-login</module>
-        <module>custom-login</module>
+        <module>custom-login-osw</module>
+        <module>custom-login-authjs</module>
         <module>front-end</module>
         <module>resource-server</module>
     </modules>
