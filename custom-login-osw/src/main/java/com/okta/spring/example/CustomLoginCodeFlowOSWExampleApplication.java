@@ -49,12 +49,12 @@ import javax.servlet.Filter;
  */
 @SpringBootApplication
 @EnableOAuth2Sso
-public class HostedLoginCodeFlowExampleApplication {
+public class CustomLoginCodeFlowOSWExampleApplication {
 
-    private final Logger logger = LoggerFactory.getLogger(HostedLoginCodeFlowExampleApplication.class);
+    private final Logger logger = LoggerFactory.getLogger(CustomLoginCodeFlowOSWExampleApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(HostedLoginCodeFlowExampleApplication.class, args);
+        SpringApplication.run(CustomLoginCodeFlowOSWExampleApplication.class, args);
     }
 
     /**

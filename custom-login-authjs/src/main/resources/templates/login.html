@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright 2017 Okta, Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login</title>
+        <!--/*/ <th:block th:include="head :: head"/> /*/-->
+
+        <link href="/css/okta.css" rel="stylesheet" type="text/css"/>
+
+        <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.6.0/okta-auth-js.min.js" type="text/javascript"></script>
+    </head>
+    <body class="login">
+
+        <div class="container">
+            <h2>Login</h2>
+            <form class="form-inline">
+                <label class="sr-only" for="email">Email</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="email" placeholder="email">
+
+                <label class="sr-only" for="email">Password</label>
+                <input type="password" class="form-control mb-2 mr-sm-2" id="password" placeholder="password">
+
+                <button type="submit" onclick="doIt(); return false;" class="btn btn-primary mb-2">Submit</button>
+            </form>
+        </div>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            var authClient = new OktaAuth({
+                url: /*[[${oktaBaseUrl}]]*/ 'https://{yourOktaDomain}',
+                clientId: /*[[${oktaClientId}]]*/ '{oktaClientId}',
+                redirectUri: /*[[${redirectUri}]]*/ '{redirectUri}',
+                issuer: /*[[${issuerUri}]]*/ '{issuerUri}'
+            });
+
+            function doIt() {
+                authClient.signIn({
+                    username: $('#email').val(),
+                    password: $('#password').val()
+                })
+                .then(function (transaction) {
+                    if (transaction.status === 'SUCCESS') {
+                        authClient.token.getWithRedirect({
+                            responseType: 'code',
+                            state: /*[[${state}]]*/ '{state}' || false,
+                            scopes: /*[[${scopes}]]*/ '[scopes]',
+                            sessionToken: transaction.sessionToken
+                        });
+                    }
+                });
+            }
+
+            /*]]>*/
+        </script>
+    </body>
+</html>
