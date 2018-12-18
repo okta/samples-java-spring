@@ -15,14 +15,15 @@
  */
 package com.okta.spring.example.controllers;
 
-import com.okta.spring.config.OktaClientProperties;
-import com.okta.spring.config.OktaOAuth2Properties;
+import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Controller
 public class LoginController {
@@ -36,33 +37,35 @@ public class LoginController {
 
     private final OktaOAuth2Properties oktaOAuth2Properties;
 
-    private final OktaClientProperties oktaClientProperties;
-
-    public LoginController(OktaOAuth2Properties oktaOAuth2Properties, OktaClientProperties oktaClientProperties) {
+    public LoginController(OktaOAuth2Properties oktaOAuth2Properties) {
         this.oktaOAuth2Properties = oktaOAuth2Properties;
-        this.oktaClientProperties = oktaClientProperties;
     }
 
-    @GetMapping(value = "/login")
+    @GetMapping(value = "/custom-login")
     public ModelAndView login(HttpServletRequest request,
-                              @RequestParam(name = "state", required = false) String state) {
+                              @RequestParam(name = "state", required = false) String state) throws MalformedURLException {
 
         // if we don't have the state parameter redirect
         if (state == null) {
             return new ModelAndView("redirect:" + oktaOAuth2Properties.getRedirectUri());
         }
 
-        // configuration for Okta Signin Widget
+        String issuer = oktaOAuth2Properties.getIssuer();
+        // the widget needs the base url, just grab the root of the issuer
+        String orgUrl = new URL(new URL(issuer), "/").toString();
+
         ModelAndView mav = new ModelAndView("login");
         mav.addObject(STATE, state);
         mav.addObject(SCOPES, oktaOAuth2Properties.getScopes());
-        mav.addObject(OKTA_BASE_URL, oktaClientProperties.getOrgUrl());
+        mav.addObject(OKTA_BASE_URL, orgUrl);
         mav.addObject(OKTA_CLIENT_ID, oktaOAuth2Properties.getClientId());
+        // from ClientRegistration.redirectUriTemplate, if the template is change you must update this
         mav.addObject(REDIRECT_URI,
             request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-            request.getContextPath() + oktaOAuth2Properties.getRedirectUri()
+            request.getContextPath() + "/authorization-code/callback"
         );
-        mav.addObject(ISSUER_URI, oktaOAuth2Properties.getIssuer());
+        mav.addObject(ISSUER_URI, issuer);
+
         return mav;
     }
 
