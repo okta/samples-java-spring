@@ -8,4 +8,4 @@ install:
 - "true"
 script:
 - "google-chrome --version"
-- "mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Pokta-tck install"
+- "./mvnw -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Pokta-tck install"
