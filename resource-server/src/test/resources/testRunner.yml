@@ -15,25 +15,11 @@
 #
 scenarios:
   implicit-flow-local-validation:
-    disabledTests:
-    - scopeAccessTest
-    - inactiveAccessTokenTest
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}
     - -Dokta.oauth2.issuer=https://localhost:${mockHttpsPort}/oauth2/default
     - -Dokta.oauth2.clientId=OOICU812
-    - -Dserver.session.trackingModes=cookie
-    - -Djavax.net.ssl.trustStore=target/tck-keystore.jks
-    - --batch-mode
-
-  implicit-flow-remote-validation:
-    command: ./mvnw
-    args:
-    - -Dserver.port=${applicationPort}
-    - -Dokta.oauth2.issuer=https://localhost:${mockHttpsPort}/oauth2/default
-    - -Dokta.oauth2.clientId=OOICU812
-    - -Dserver.session.trackingModes=cookie
-    - -Dokta.oauth2.localTokenValidation=false
+    - -Dserver.servlet.session.tracking-modes=cookie
     - -Djavax.net.ssl.trustStore=target/tck-keystore.jks
     - --batch-mode

@@ -14,31 +14,15 @@
 # limitations under the License.
 #
 scenarios:
-  custom-code-flow-local-validation:
-    disabledTests:
-    - respondWithCode
-    - invalidSignatureAccessTokenJwtTest
-    - noAuthCodeTest
-    command: ./mvnw
-    args:
-    - -Dserver.port=${applicationPort}
-    - -Dokta.oauth2.issuer=https://localhost:${mockHttpsPort}/oauth2/default
-    - -Dokta.oauth2.clientId=OOICU812
-    - -Dokta.oauth2.clientSecret=VERY_SECRET
-    - -Dserver.session.trackingModes=cookie
-    - -Djavax.net.ssl.trustStore=target/tck-keystore.jks
-    - --batch-mode
-
   custom-code-flow-remote-validation:
-    disabledTests:
-    - respondWithCode
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}
     - -Dokta.oauth2.issuer=https://localhost:${mockHttpsPort}/oauth2/default
     - -Dokta.oauth2.clientId=OOICU812
     - -Dokta.oauth2.clientSecret=VERY_SECRET
-    - -Dserver.session.trackingModes=cookie
-    - -Dokta.oauth2.localTokenValidation=false
+    - -Dokta.oauth2.scopes=offline_access
+    - -Dserver.servlet.session.tracking-modes=cookie
     - -Djavax.net.ssl.trustStore=target/tck-keystore.jks
     - --batch-mode
+    protectedPath: /oauth2/authorization/okta

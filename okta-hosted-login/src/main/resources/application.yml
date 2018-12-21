@@ -1,6 +1,15 @@
-security:
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          okta:
+            user-name-attribute: email
+
+okta:
   oauth2:
-    sso:
-      loginPath: /authorization-code/callback
-    client:
-      clientAuthenticationScheme: header
+    redirect-uri: /authorization-code/callback
+    scopes:
+    - profile
+    - email
+    - openid
