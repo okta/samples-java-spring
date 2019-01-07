@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +30,10 @@ public class ResourceServerExampleApplication {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.oauth2ResourceServer().jwt();
+            http.authorizeRequests()
+                .anyRequest().authenticated()
+            .and()
+                .oauth2ResourceServer().jwt();
         }
     }
 
@@ -40,8 +43,8 @@ public class ResourceServerExampleApplication {
 
         @GetMapping("/api/userProfile")
         @PreAuthorize("hasAuthority('SCOPE_profile')")
-        public Map<String, Object> getUserDetails(OAuth2AuthenticationToken authentication) {
-            return (Map<String, Object>) authentication.getDetails();
+        public Map<String, Object> getUserDetails(JwtAuthenticationToken authentication) {
+            return authentication.getTokenAttributes();
         }
 
         @GetMapping("/api/messages")
