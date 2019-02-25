@@ -18,7 +18,7 @@ You also need to gather the following information from the Okta Developer Consol
 
 - **Client ID** and **Client Secret** - These can be found on the "General" tab of the Web application that you created earlier in the Okta Developer Console.
 
-- **Issuer** - This is the URL of the authorization server that will perform authentication.  All Developer Accounts have a "default" authorization server.  The issuer is a combination of your Org URL (found in the upper right of the console home page) and `/oauth2/default`. For example, `https://dev-1234.oktapreview.com/oauth2/default`.
+- **Issuer** - This is the URL of the authorization server that will perform authentication.  All Developer Accounts have a "default" authorization server.  The issuer is a combination of your Org URL (found in the upper right of the console home page) and `/oauth2/default`. For example, `https://dev-1234.okta.com/oauth2/default`.
 
 Plug these values into the `mvn` commands used to start the application.
 
@@ -30,7 +30,14 @@ mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.client.orgUrl=https://{yourOktaDomain}
 ```
 
-> **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead update the projects `application.yml`
+> **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. You can put them in your `application.yml` if you're using a closed source control system. Otherwise, we recommend you store them as environment variables. For example:
+> ```
+> export OKTA_OAUTH2_ISSUER=https://{yourOktaDomain}/oauth2/default
+> export OKTA_OAUTH2_CLIENT_ID={yourClientSecret}
+> export OKTA_OAUTH2_CLIENT_SECRET={yourClientSecret}
+> export OKTA_CLIENT_ORG_URL=https://{yourOktaDomain}
+> ```
+> Then you can simply use `mvn` to start your app.
 
 Now navigate to http://localhost:8080 in your browser.
 
