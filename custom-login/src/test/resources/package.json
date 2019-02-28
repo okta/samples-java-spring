@@ -5,7 +5,7 @@
         "pretest": "webdriver-manager update --gecko false",
         "test:protractor": "protractor e2e-tests/custom-login/conf.js",
         "test": "npm run test:protractor",
-        "custom-login-server": "mvn -f ../../pom.xml -Dokta.oauth2.localTokenValidation=false"
+        "custom-login-server": "mvn -f ../../pom.xml"
     },
     "devDependencies": {
       "dotenv": "^5.0.1",
