@@ -40,7 +40,7 @@ Update the configuration file [`config.js`](/front-end/src/main/resources/static
 // okta widget configuration
 window.oktaSignIn = new OktaSignIn({
   baseUrl: 'https://{yourOktaDomain}',
-  clientId: '{yourClientId}',
+  clientId: '{clientId}',
   redirectUri: window.location.href,
   authParams: {
     issuer: 'default',

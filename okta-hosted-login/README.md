@@ -31,8 +31,8 @@ Plug these values into the `mvn` commands used to start the application.
 ```bash
 cd okta-hosted-login
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
-    -Dokta.oauth2.clientId={yourClientId} \
-    -Dokta.oauth2.clientSecret={yourClientSecret}
+    -Dokta.oauth2.clientId={clientId} \
+    -Dokta.oauth2.clientSecret={clientSecret}
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead update the projects `application.yml`

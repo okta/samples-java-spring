@@ -26,7 +26,7 @@ Update the configuration file [`config.js`](./src/main/resources/static/js/confi
 ```javascript
 window.oktaSignIn = new OktaSignIn({
   baseUrl: 'https://{yourOktaDomain}',
-  clientId: '{yourClientId}',
+  clientId: '{clientId}',
   redirectUri: window.location.href,
   authParams: {
     issuer: 'default',
