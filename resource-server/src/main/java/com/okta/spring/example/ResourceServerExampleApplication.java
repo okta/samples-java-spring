@@ -1,24 +1,19 @@
 package com.okta.spring.example;
 
+import com.okta.spring.boot.oauth.Okta;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,10 +35,17 @@ public class ResourceServerExampleApplication {
                 .anyRequest().authenticated()
             .and()
                 .oauth2ResourceServer().jwt();
+
+            // process CORS annotations
+            http.cors();
+
+            // force a non-empty response body for 401's to make the response more browser friendly
+            Okta.configureResourceServer401ResponseBody(http);
         }
     }
 
     @RestController
+    @CrossOrigin(origins = "http://localhost:8080")
     public class MessageOfTheDayController {
 
         @GetMapping("/api/userProfile")
@@ -64,24 +66,6 @@ public class ResourceServerExampleApplication {
 
             return result;
         }
-    }
-
-    /*
-     * Configuring CORS is only needed when making browser based requests (see the "front-end") example.
-     * The actual CORS configuration would be specific to your application.
-     */
-    @Bean
-    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return bean;
     }
 
     class Message {
