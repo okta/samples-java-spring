@@ -34,26 +34,13 @@ To start the front-end, you need to gather the following information from the Ok
 - **Client Id** - The client ID of the SPA application that you created earlier. This can be found on the "General" tab of an application, or the list of applications. The resource server will validate that tokens have been minted for this application.
 - **Base URL** - This is the URL of the developer org that you created. For example, `https://dev-1234.oktapreview.com`.
 
-Update the configuration file [`config.js`](/front-end/src/main/resources/static/js/config.js) with the client id and base url that you obtained in the previous step.
-
-```javascript
-// okta widget configuration
-window.oktaSignIn = new OktaSignIn({
-  baseUrl: 'https://{yourOktaDomain}',
-  clientId: '{clientId}',
-  redirectUri: window.location.href,
-  authParams: {
-    issuer: 'default',
-    responseType: ['id_token', 'token'],
-    scopes: ["openid", "profile", "email"]
-  }
-});
-```
 Now start the front-end.
 
 ```bash
 cd front-end
-mvn
+mvn \
+  -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
+  -Dokta.oauth2.client-id={clientId}
 ```
 
 Browse to: `http://localhost:8080/` to login!
