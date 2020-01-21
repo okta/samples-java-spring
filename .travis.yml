@@ -8,7 +8,7 @@ addons:
   sauce_connect: true
 
 jdk:
-- oraclejdk8
+- oraclejdk9
 - openjdk11
 
 # skip the Travis-CI install phase because Maven handles that directly
