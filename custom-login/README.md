@@ -26,7 +26,8 @@ Plug these values into the `mvn` commands used to start the application.
 cd custom-login
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={clientId} \
-    -Dokta.oauth2.clientSecret={clientSecret}
+    -Dokta.oauth2.clientSecret={clientSecret} \
+    -Dokta.oauth2.postLogoutRedirectUri={postLogoutRedirectUri}
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. You can put them in your `application.yml` if you're using a closed source control system. Otherwise, we recommend you store them as environment variables. For example:
