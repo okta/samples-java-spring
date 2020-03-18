@@ -29,6 +29,7 @@ import java.net.URL;
 public class LoginController {
 
     private static final String STATE = "state";
+    private static final String NONCE = "nonce";
     private static final String SCOPES = "scopes";
     private static final String OKTA_BASE_URL = "oktaBaseUrl";
     private static final String OKTA_CLIENT_ID = "oktaClientId";
@@ -43,7 +44,8 @@ public class LoginController {
 
     @GetMapping(value = "/custom-login")
     public ModelAndView login(HttpServletRequest request,
-                              @RequestParam(name = "state", required = false) String state) throws MalformedURLException {
+                              @RequestParam(name = "state", required = false) String state,
+                              @RequestParam(name = "nonce") String nonce) throws MalformedURLException {
 
         // if we don't have the state parameter redirect
         if (state == null) {
@@ -56,6 +58,7 @@ public class LoginController {
 
         ModelAndView mav = new ModelAndView("login");
         mav.addObject(STATE, state);
+        mav.addObject(NONCE, nonce);
         mav.addObject(SCOPES, oktaOAuth2Properties.getScopes());
         mav.addObject(OKTA_BASE_URL, orgUrl);
         mav.addObject(OKTA_CLIENT_ID, oktaOAuth2Properties.getClientId());
