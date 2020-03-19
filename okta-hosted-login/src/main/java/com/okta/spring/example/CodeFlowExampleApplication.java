@@ -31,8 +31,9 @@ public class CodeFlowExampleApplication {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    // allow antonymous access to the root page
+                    // allow anonymous access to the root page
                     .antMatchers("/").permitAll()
+                    .antMatchers("/everyone").permitAll()
                     // all other requests
                     .anyRequest().authenticated()
 
@@ -55,6 +56,11 @@ public class CodeFlowExampleApplication {
         @GetMapping("/")
         public String home() {
             return "home";
+        }
+
+        @GetMapping("/everyone")
+        public String everyoneRole() {
+            return "everyone";
         }
 
         @GetMapping("/profile")
