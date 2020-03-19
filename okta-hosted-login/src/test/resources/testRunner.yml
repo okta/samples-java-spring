@@ -20,6 +20,7 @@ scenarios:
     - invalidIssuerIdTokenJwtTest
     - testGroupInClaimToAuthority
     - testInvalidGroupClaimMapping
+    - rpInitiatedLogoutTest
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}
