@@ -18,6 +18,8 @@ scenarios:
     disabledTests:
     # Spring does remote validation of the token
     - invalidIssuerIdTokenJwtTest
+    - testGroupInClaimToAuthority
+    - testInvalidGroupClaimMapping
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}
