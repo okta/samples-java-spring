@@ -117,7 +117,7 @@
             <id>okta-tck</id>
 
             <properties>
-                <node.version>v8.1.2</node.version>
+                <node.version>v10.15.1</node.version>
             </properties>
 
             <build>
