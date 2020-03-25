@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.5.RELEASE</version>
+        <version>2.2.5.RELEASE</version>
     </parent>
 
     <groupId>com.example.okta</groupId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.okta.spring</groupId>
             <artifactId>okta-spring-boot-starter</artifactId>
-            <version>1.2.1</version>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.okta.oidc.tck</groupId>
             <artifactId>okta-oidc-tck</artifactId>
-            <version>0.5.1</version>
+            <version>0.5.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -117,7 +117,7 @@
             <id>okta-tck</id>
 
             <properties>
-                <node.version>v8.1.2</node.version>
+                <node.version>v10.15.1</node.version>
             </properties>
 
             <build>

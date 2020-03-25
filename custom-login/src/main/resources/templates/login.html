@@ -40,6 +40,7 @@ config.authParams = {
   issuer: /*[[${issuerUri}]]*/ '{issuerUri}',
   responseType: 'code',
   state: /*[[${state}]]*/ '{state}' || false,
+  nonce: /*[[${nonce}]]*/ '{nonce}',
   scopes: /*[[${scopes}]]*/ '[scopes]',
   display: 'page'
 };

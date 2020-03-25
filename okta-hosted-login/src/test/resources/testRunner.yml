@@ -17,7 +17,11 @@ scenarios:
   oidc-code-flow-local-validation:
     disabledTests:
     # Spring does remote validation of the token
+    # TODO - enable rpInitiatedLogoutTest after OKTA-285180 is resolved
     - invalidIssuerIdTokenJwtTest
+    - testGroupInClaimToAuthority
+    - testInvalidGroupClaimMapping
+    - rpInitiatedLogoutTest
     command: ./mvnw
     args:
     - -Dserver.port=${applicationPort}
