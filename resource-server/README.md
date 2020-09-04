@@ -26,6 +26,17 @@ mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default
 ```
 > **NOTE:** The above command starts the resource server on port 8000. You can browse to `http://localhost:8000` to ensure it has started. If you get the message "401 Unauthorized", it indicates that the resource server is up. You will need to pass an access token to access the resource, which will be done by the front-end below.
 
+By default, the access token JWT returned by your authorization server will be validated by the resource server.
+If you want to validate/introspect an opaque token instead, start the resource server with few additional properties:
+
+```bash
+mvn \
+  -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
+  -Dokta.oauth2.opaque=true \
+  -Dokta.oauth2.client-id={clientId} \
+  -Dokta.oauth2.client-secret={clientSecret}
+```
+
 **front-end:**
 
 Instead of using one of our front-end sample applications listed above, you can also use the [front-end](../front-end) within this repo to quickly test the resource server.
