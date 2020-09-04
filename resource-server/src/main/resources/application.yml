@@ -2,6 +2,18 @@ server:
   port: 8000
 
 spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        opaquetoken:
+#          introspection-uri: https://dev-298876.okta.com/oauth2/default/v1/introspect
+#          client-id: 0oanb5cp8bQwGReSl4x6
+#          client-secret: HgA5I3Mf0dJPJudnqoK4mQTOmIJlIzQXapnUxq8D
+#      client:
+#        provider:
+#          okta:
+#            authorization-uri: http://dev-298876.okta.com/oauth2/default/v1/authorize
+#            token-uri: http://dev-298876.okta.com/oauth2/default/v1/token
   jackson:
     serialization:
       write-dates-as-timestamps: false
