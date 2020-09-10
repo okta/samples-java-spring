@@ -33,7 +33,8 @@ If you want to validate/introspect an opaque token instead, start the resource s
 mvn \
   -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
   -Dokta.oauth2.opaque=true \
-  -Dokta.oauth2.client-id={clientId}
+  -Dokta.oauth2.client-id={clientId} \
+  -Dokta.oauth2.client-secret={clientSecret}
 ```
 
 **front-end:**
