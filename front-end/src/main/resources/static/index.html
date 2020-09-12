@@ -26,9 +26,8 @@
 
     <base href="/">
 
-    <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/js/okta-sign-in.min.js" type="text/javascript"></script>
-    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet">
-    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.1.0/css/okta-theme.css" type="text/css" rel="stylesheet">
+    <script src="https://global.oktacdn.com/okta-signin-widget/4.3.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/4.3.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
@@ -150,41 +149,38 @@
     });
   }
 
-  function doInit() {
+  async function doInit() {
 
-    $( "#logout" ).click(function() {
-      oktaSignIn.signOut(() => {
-        oktaSignIn.tokenManager.clear();
+    $("#logout").click(function () {
+        oktaSignIn.authClient.tokenManager.clear();
         location.reload();
-      });
     });
 
     // Check if we already have an access token
-    const token = oktaSignIn.tokenManager.get('my_access_token');
+    const token = await oktaSignIn.authClient.tokenManager.get('accessToken');
 
     // if we do great, just go with it!
     if (token) {
-      doAllTheThings(token.accessToken)
+      doAllTheThings(token.value)
     } else {
-
       // otherwise show the login widget
       oktaSignIn.renderEl(
         {el: '#okta-login-container'},
-        function (response) {
 
-          // check if success
-          if (response.status === 'SUCCESS') {
+        function success(res) {
+          // OIDC response
 
-            // for our example we have the id token and the access token
-            oktaSignIn.tokenManager.add('my_id_token', response[0]);
-            oktaSignIn.tokenManager.add('my_access_token', response[1]);
+          // If the widget is configured for OIDC with multiple responseTypes, the
+          // response will be an array of tokens:
+          // i.e. authParams.responseType = ['id_token', 'token']
+          oktaSignIn.authClient.tokenManager.add('idToken', res.tokens.idToken);
+          oktaSignIn.authClient.tokenManager.add('accessToken', res.tokens.accessToken);
 
-            // hide the widget
-            oktaSignIn.hide();
-
-            // now for the fun part!
-            doAllTheThings(response[1].accessToken);
-          }
+          oktaSignIn.authClient.tokenManager.get('accessToken')
+            .then(function(accessToken) {
+              oktaSignIn.hide();
+              doAllTheThings(accessToken.value);
+            });
         },
         function (err) {
           // handle any errors
