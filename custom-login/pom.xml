@@ -68,6 +68,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>8.20</version>
+        </dependency>
 
         <!-- Logging -->
         <dependency>
@@ -86,7 +91,7 @@
         <dependency>
             <groupId>com.okta.oidc.tck</groupId>
             <artifactId>okta-oidc-tck</artifactId>
-            <version>0.5.5</version>
+            <version>0.5.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
