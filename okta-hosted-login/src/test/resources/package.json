@@ -2,12 +2,13 @@
     "name": "@okta/samples-java-spring-hosted-login-tests",
     "version": "0.0.2",
     "scripts": {
-        "pretest": "webdriver-manager update --gecko false",
+        "pretest": "node update-se-drivers.js",
         "test:protractor": "protractor e2e-tests/okta-hosted-login/conf.js",
         "test": "npm run test:protractor",
         "okta-hosted-login-server": "mvn -f ../../pom.xml -Dokta.oauth2.localTokenValidation=false"
     },
     "devDependencies": {
+        "axios": "^0.20.0",
         "dotenv": "^5.0.1",
         "find-process": "^1.1.0",
         "forever-monitor": "^2.0.0",
