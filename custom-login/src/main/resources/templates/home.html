@@ -32,7 +32,7 @@
       </div>
 
       <div th:if="${#authorization.expression('isAuthenticated()')}" class="text container">
-        <p>Welcome home, <span th:text="${#authentication.name}">Joe Coder</span>!</p>
+        <p>Welcome home, <span th:text="${#authentication.principal.attributes['name']}">Joe Coder</span>!</p>
         <p>You have successfully authenticated against your Okta org, and have been redirected back to this application.</p>
         <p>Visit the <a th:href="@{/profile}">My Profile</a> page in this application to view the information retrieved with your OAuth Access Token.</p>
       </div>
