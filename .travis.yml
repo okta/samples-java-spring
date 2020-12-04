@@ -1,23 +1,23 @@
 language: java
-
 addons:
   apt:
     packages:
-      - libxml2-utils
+    - libxml2-utils
   chrome: stable
   sauce_connect: true
-
 jdk:
 - openjdk8
 - openjdk11
-
 before_install:
-- ./mvnw --version
-
-# skip the Travis-CI install phase because Maven handles that directly
+- "./mvnw --version"
 install:
-- "true"
-
+- 'true'
 script:
-- "google-chrome --version"
-- "./mvnw -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Pokta-tck install"
+- google-chrome --version
+- "./mvnw -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  -Pokta-tck install"
+notifications:
+  slack:
+    secure: SBEVD9/B76HDWhwTm1a7jhUadhB+CuETKcBTRoM7cYXj3qdGGgTowAs8JL0IP54DLRTALo9i8AsTBNnxuLDdcjO4qD1HD5ka0QvRJBnzu8Kjo5dgekISxDVeWi5GSOJFtcy4eM1u2FgOpjAlUSewy8mwb6x8O9gc57fFNGTaofB1AiWpcZ7nw3UrVS7PxTXSi1WILGq0W0aEEJ3SWjb6aFpgIX1XKikiUKuE/Gg565c8AVIc3Q9R8COx7gGZbVyKKzwMi/uLdSrTXnxGy1PepGkRhEGnxlUhss7jeFM6Zkc7ij05TU2yX1mLKocvuBlSBp+pX7OKuf6V4CVZ1ZvZY+Etq3nD1qAXIMsd6NIFA9SCIYzVx8fXRdWNMqNNmLtAzwp8xu0h5NsS2PlPYi+yNRa6CV4rGbSFZ3wU1VRgMYLaQcymIzqASmRsImrPYSWAUUZoqqhLBt2pg448COXIUcpg6GUZxj2BZ0c5fxi4ExiqmScukiesIAeryWg9eY6WnhPBuY7isDCCqLlSCVEwxPjP/Ie7yQLhU+NGcLbnAY9e3C5dfpa1RsyvODDjxpY+ZjP4Yn1Vf2TMHuwB7JmG3h1Kw90ze4ukaoO8pSb/Gn4thYXt56oDAks7Vgz/0UInzsGeHdbiEGdVElI2N596s8AWLa9aMi9EAaPUcUU27zU=
+    on_success: never
+    on_failure: always
