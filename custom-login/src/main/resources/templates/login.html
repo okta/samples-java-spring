@@ -18,10 +18,8 @@
     <title>Login</title>
     <!--/*/ <th:block th:include="head :: head"/> /*/-->
 
-    <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.13.0/js/okta-sign-in.min.js" type="text/javascript"></script>
-    <link href="/css/okta.css" rel="stylesheet" type="text/css"/>
-    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.13.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
-    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.13.0/css/okta-theme.css" type="text/css" rel="stylesheet"/>
+    <script src="https://global.oktacdn.com/okta-signin-widget/5.2.0/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/5.2.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body class="login">
@@ -35,10 +33,10 @@ var config = {};
 config.baseUrl = /*[[${oktaBaseUrl}]]*/ 'https://{yourOktaDomain}';
 config.clientId = /*[[${oktaClientId}]]*/ '{clientId}';
 config.redirectUri = /*[[${redirectUri}]]*/ '{redirectUri}';
-config.logo = 'https://spring.io/img/homepage/icon-spring-cloud.svg';
 config.authParams = {
   issuer: /*[[${issuerUri}]]*/ '{issuerUri}',
   responseType: 'code',
+  pkce: false,
   state: /*[[${state}]]*/ '{state}' || false,
   nonce: /*[[${nonce}]]*/ '{nonce}',
   scopes: /*[[${scopes}]]*/ '[scopes]',
