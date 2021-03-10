@@ -28,6 +28,7 @@
     <modules>
         <module>okta-hosted-login</module>
         <module>custom-login</module>
+        <module>federated-auth</module>
         <module>front-end</module>
         <module>resource-server</module>
     </modules>

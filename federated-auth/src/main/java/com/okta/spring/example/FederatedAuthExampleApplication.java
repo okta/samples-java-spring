@@ -16,10 +16,10 @@ import java.util.Collections;
 
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class CodeFlowExampleApplication {
+public class FederatedAuthExampleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CodeFlowExampleApplication.class, args);
+        SpringApplication.run(FederatedAuthExampleApplication.class, args);
     }
 
     /**
