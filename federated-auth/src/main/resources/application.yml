@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          okta:
+            user-name-attribute: email
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG
+okta:
+  oauth2:
+    redirect-uri: /authorization-code/callback
+    scopes:
+    - profile
+    - email
+    - openid
