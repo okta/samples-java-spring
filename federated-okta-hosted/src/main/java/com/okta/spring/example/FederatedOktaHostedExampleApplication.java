@@ -16,10 +16,10 @@ import java.util.Collections;
 
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class FederatedAuthExampleApplication {
+public class FederatedOktaHostedExampleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FederatedAuthExampleApplication.class, args);
+        SpringApplication.run(FederatedOktaHostedExampleApplication.class, args);
     }
 
     /**
