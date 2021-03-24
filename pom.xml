@@ -27,7 +27,7 @@
 
     <modules>
         <module>custom-login</module>
-        <module>federated-auth</module>
+        <module>federated-okta-hosted</module>
         <module>front-end</module>
         <module>resource-server</module>
     </modules>

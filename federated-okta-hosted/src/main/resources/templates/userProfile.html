@@ -1,0 +1,49 @@
+<!--
+  ~ Copyright 2017 Okta, Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Details</title>
+    <!--/*/ <th:block th:include="head :: head"/> /*/-->
+</head>
+<body id="samples">
+  <div th:replace="menu :: menu"></div>
+
+    <div id="content" class="container">
+
+      <div>
+        <h2>My Profile</h2>
+        <p>Hello, <span th:text="${#authentication.principal.attributes['name']}">Joe Coder</span>. Below is the information that was read with your <a href="https://developer.okta.com/docs/api/resources/oidc.html#get-user-information">Access Token</a>.
+        </p>
+        <p>This route is protected with the annotation <code>@PreAuthorize("hasAuthority('SCOPE_profile')")</code>, which will ensure that this page cannot be accessed until you have authenticated, and have the scope <code>profile</code>.</p>
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Claim</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="item : ${details}">
+                <td th:text="${item.key}">Key</td>
+                <td th:id="${'claim-' + item.key}" th:text="${item.value}">Value</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
