@@ -9,6 +9,8 @@ Before running this sample, you will need the following:
 
 * An Okta Developer Account, you can sign up for one at https://developer.okta.com/signup/.
 * An Okta Application, configured for Web mode. This is done from the Okta Developer Console and you can find instructions [here][OIDC Web Application Setup Instructions].  When following the wizard, use the default properties.  They are designed to work with our sample applications.
+* Your Okta Application entry needs a login redirect URI. Go to "Login redirect URIs" under "General Settings" for your application, click "Edit" and add http://localhost:8080/authorization-code/callback.
+* Your Okta Application entry needs the logout callback. "Logout redirect URIs" under "General" for the application should list http://localhost:8080. If it is not present, click "Edit" and add it.
 * The source code from this repository:
 
     ```
@@ -32,7 +34,8 @@ Plug these values into the `mvn` commands used to start the application.
 cd okta-hosted-login
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={clientId} \
-    -Dokta.oauth2.clientSecret={clientSecret}
+    -Dokta.oauth2.clientSecret={clientSecret} \
+    -Dokta.oauth2.postLogoutRedirectUri={absoluteLogoutRedirectUri} # (optional) configure this property to enable SSO logout.
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead, we recommend you store them as environment variables. For example:
@@ -41,6 +44,7 @@ mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
 export OKTA_OAUTH2_ISSUER=https://{yourOktaDomain}/oauth2/default
 export OKTA_OAUTH2_CLIENT_ID={clientId}
 export OKTA_OAUTH2_CLIENT_SECRET={clientSecret}
+export OKTA_OAUTH2_POST_LOGOUT_REDIRECT_URI={absoluteLogoutRedirectUri}
 ```
 
 Now navigate to http://localhost:8080 in your browser.

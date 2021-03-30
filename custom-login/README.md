@@ -9,6 +9,8 @@ Before running this sample, you will need the following:
 
 * An Okta Developer Account, you can sign up for one at https://developer.okta.com/signup/.
 * An Okta Application, configured for Web mode. This is done from the Okta Developer Console and you can find instructions [here][OIDC Web Application Setup Instructions].  When following the wizard, use the default properties.  They are designed to work with our sample applications.
+* Your Okta Application entry needs a login redirect URI. Go to "Login redirect URIs" under "General Settings" for your application, click "Edit" and add http://localhost:8080/authorization-code/callback.
+* Your Okta Application entry needs the logout callback. "Logout redirect URIs" under "General" for the application should list http://localhost:8080. If it is not present, click "Edit" and add it.
 
 ## Running This Example
 
