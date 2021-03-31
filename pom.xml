@@ -30,5 +30,6 @@
         <module>custom-login</module>
         <module>front-end</module>
         <module>resource-server</module>
+        <module>direct-auth</module>
     </modules>
 </project>

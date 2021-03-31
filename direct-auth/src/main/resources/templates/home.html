@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+    <p><label>Access Token: </label>
+        <span th:text="${authenticationResponse.tokenResponse.accessToken}?: 'Not Available'">1</span></p>
+
+    <p><label>Expires In: </label>
+        <span th:text="${authenticationResponse.tokenResponse.expiresIn}?: 'Not Available'">1</span></p>
+
+    <p><label>ID Token: </label>
+        <span th:text="${authenticationResponse.tokenResponse.idToken}?: 'Not Available'">1</span></p>
+
+    <p><label>Refresh Token: </label>
+        <span th:text="${authenticationResponse.tokenResponse.refreshToken}?: 'Not Available'">1</span></p>
+
+    <p><label>Scope(s): </label>
+        <span th:text="${authenticationResponse.tokenResponse.scope}?: 'Not Available'">1</span></p>
+
+    <p><label>Token Type: </label>
+        <span th:text="${authenticationResponse.tokenResponse.tokenType}?: 'Not Available'">1</span></p>
+
+    <p><label>Error(s): </label>
+        <span th:text="${authenticationResponse.errors}?: 'None'">1</span>
+</div>
+
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>
