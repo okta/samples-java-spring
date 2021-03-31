@@ -11,7 +11,11 @@ There is a pom.xml at the root of this project, that exists to build all the pro
 
 ```bash
 cd direct-auth
-mvn spring-boot:run
+mvn -Dokta.idx.issuer=https://{yourOktaDomain}/oauth2 \
+    -Dokta.idx.clientId={clientId} \
+    -Dokta.idx.clientSecret={clientSecret} \ 
+    -Dokta.idx.scopes="space separated scopes" 
+    -Dokta.idx.redirectUri={redirectUri}
 ```
 
 Now navigate to http://localhost:8080 in your browser.
