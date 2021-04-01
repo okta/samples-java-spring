@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Verify Code</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .verify-form {
+            width: 340px;
+            margin: 50px auto;
+        }
+        .verify-form form {
+            margin-bottom: 15px;
+            background: #f7f7f7;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+        .verify-form h2 {
+            margin: 0 0 15px;
+        }
+        .form-control, .btn {
+            min-height: 38px;
+            border-radius: 2px;
+        }
+        .btn {
+            font-size: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<form method="get" th:action="@{/custom-login}" class="navbar-form navbar-right">
+    <button id="home-button" type="submit" class="btn btn-done">Back to Login</button>
+</form>
+
+<div class="verify-form">
+    <form th:action="@{/verify}" method="post">
+        <h2 class="text-center">Verify Code</h2>
+        <div th:if="${result}" class="alert alert-danger">
+            <span th:text="${result}">1</span>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="code" placeholder="code" required="required">
+        </div>
+        <div class="form-group">
+            <button id="verify-btn" type="submit" class="btn btn-primary btn-block">Submit</button>
+        </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    </form>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
