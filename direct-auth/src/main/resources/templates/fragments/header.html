@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -7,16 +7,6 @@
     <div th:fragment="header-css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     </div>
+    <title>Header</title>
 </head>
-<body>
-<div th:fragment="header">
-    <nav class="navbar navBarCell1Rev" >
-        <div class="container-fluid">
-            <form method="post" th:action="@{/logout}" class="navbar-form navbar-right">
-                <button id="logout-button" type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
-    </nav>
-</div>
-</body>
 </html>

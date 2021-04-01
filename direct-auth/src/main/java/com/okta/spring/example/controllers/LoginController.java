@@ -15,27 +15,25 @@
  */
 package com.okta.spring.example.controllers;
 
-import com.okta.commons.lang.Assert;
 import com.okta.idx.sdk.api.client.Clients;
 import com.okta.idx.sdk.api.client.IDXClient;
-import com.okta.idx.sdk.api.exception.ProcessingException;
 import com.okta.idx.sdk.api.model.AuthenticationOptions;
+import com.okta.idx.sdk.api.model.AuthenticationStatus;
+import com.okta.idx.sdk.api.model.AuthenticatorType;
+import com.okta.idx.sdk.api.model.ChangePasswordOptions;
 import com.okta.idx.sdk.api.model.IDXClientContext;
 import com.okta.idx.sdk.api.model.RecoverPasswordOptions;
+import com.okta.idx.sdk.api.model.VerifyAuthenticatorOptions;
 import com.okta.idx.sdk.api.response.AuthenticationResponse;
 import com.okta.idx.sdk.api.wrapper.AuthenticationWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 public class LoginController {
@@ -44,60 +42,107 @@ public class LoginController {
 
     private static final IDXClient client = Clients.builder().build();
 
-    @GetMapping(value = "/custom-login")
-    public ModelAndView getLogin() {
-        return new ModelAndView("login");
-    }
-
     @PostMapping("/custom-login")
     public ModelAndView postLogin(@RequestParam("username") String username,
-                                  @RequestParam("password") String password,
-                                      HttpSession httpSession) {
+                                  @RequestParam("password") String password) {
 
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        ModelAndView mav = new ModelAndView("home");
-        IDXClientContext clientContext;
-        String interactionHandle;
+        AuthenticationResponse authenticationResponse =
+                AuthenticationWrapper.authenticate(client, new AuthenticationOptions(username, password));
 
-        try {
-            clientContext = client.interact();
-            interactionHandle = clientContext.getInteractionHandle();
-            Assert.hasText(clientContext.getInteractionHandle(), "Missing interaction handle");
-        } catch (ProcessingException e) {
-            logger.error("Exception occurred while trying to invoke interact API:", e);
-            List<String> errors = new LinkedList<>();
-            Arrays.stream(e.getErrorResponse().getMessages().getValue()).forEach(msg -> errors.add(msg.getMessage()));
-            authenticationResponse.setErrors(errors);
-            return mav;
-        } catch (IllegalArgumentException e) {
-            authenticationResponse.addError(e.getMessage());
-            return mav;
+        if (authenticationResponse.getAuthenticationStatus() != AuthenticationStatus.SUCCESS) {
+            ModelAndView modelAndView = new ModelAndView("login");
+            modelAndView.addObject("messages", authenticationResponse.getErrors());
+            return modelAndView;
         }
 
-        authenticationResponse = AuthenticationWrapper.authenticate(client, new AuthenticationOptions(username, password));
-
-        logger.info("Stored interaction handle {} in http session", interactionHandle);
-        httpSession.setAttribute("interactionHandle", interactionHandle);
+        ModelAndView mav = new ModelAndView("home");
         mav.addObject("authenticationResponse", authenticationResponse);
         return mav;
     }
 
-    @GetMapping("/forgot-password")
-    public ModelAndView getForgotPassword() {
-        return new ModelAndView("forgotpassword");
-    }
 
     @PostMapping("/forgot-password")
-    public ModelAndView postForgotPassword(RecoverPasswordOptions recoverPasswordOptions) {
+    public ModelAndView postForgotPassword(@RequestParam("username") String username,
+                                           @RequestParam("authenticatorType") String authenticatorType,
+                                           HttpSession httpSession) {
         logger.info(":: Forgot Password ::");
 
-        AuthenticationResponse authenticationResponse = AuthenticationWrapper.recoverPassword(client, recoverPasswordOptions);
+        //TODO
+        AuthenticationResponse authenticationResponse =
+                AuthenticationWrapper.recoverPassword(client, new RecoverPasswordOptions(username, AuthenticatorType.EMAIL));
 
-       return null;
+        logger.info("Authentication status: {}", authenticationResponse.getAuthenticationStatus());
+
+        if (authenticationResponse.getAuthenticationStatus().equals(AuthenticationStatus.AWAITING_AUTHENTICATOR_VERIFICATION)) {
+            httpSession.setAttribute("idxClientContext", authenticationResponse.getIdxClientContext());
+            return new ModelAndView("verify");
+        }
+
+        return null; //TODO
     }
 
-    @GetMapping("/403")
-    public String error403() {
-        return "403";
+    @PostMapping("/verify")
+    public ModelAndView postVerify(@RequestParam("code") String code,
+                                   HttpSession httpSession) {
+        logger.info(":: Verify Code :: {}", code);
+
+        IDXClientContext idxClientContext = (IDXClientContext) httpSession.getAttribute("idxClientContext");
+
+        VerifyAuthenticatorOptions verifyAuthenticatorOptions = new VerifyAuthenticatorOptions();
+        verifyAuthenticatorOptions.setCode(code);
+
+        AuthenticationResponse authenticationResponse =
+                AuthenticationWrapper.verifyAuthenticator(client, idxClientContext, verifyAuthenticatorOptions);
+
+        logger.info("Authentication status: {}", authenticationResponse.getAuthenticationStatus());
+
+        if (authenticationResponse.getAuthenticationStatus() == AuthenticationStatus.AWAITING_PASSWORD_RESET) {
+            ModelAndView modelAndView = new ModelAndView("changepassword");
+            return modelAndView;
+        }
+
+        ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("messages", authenticationResponse.getAuthenticationStatus().toString());
+        return modelAndView;
+    }
+
+    @PostMapping("/change-password")
+    public ModelAndView postChangePassword(@RequestParam("new-password") String newPassword,
+                                           @RequestParam("confirm-new-password") String confirmNewPassword,
+                                           HttpSession httpSession) {
+        logger.info(":: Change Password ::");
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            ModelAndView modelAndView = new ModelAndView("changepassword");
+            modelAndView.addObject("result", "Passwords do not match");
+            return modelAndView;
+        }
+
+        ModelAndView modelAndView = new ModelAndView("login");
+
+        IDXClientContext idxClientContext = (IDXClientContext) httpSession.getAttribute("idxClientContext");
+
+        ChangePasswordOptions changePasswordOptions = new ChangePasswordOptions();
+        changePasswordOptions.setNewPassword(newPassword);
+
+        logger.info("IdxClientContext == null? {}", idxClientContext == null);
+
+        AuthenticationResponse authenticationResponse =
+                AuthenticationWrapper.changePassword(client, idxClientContext, changePasswordOptions);
+
+        logger.info("Authentication status: {}", authenticationResponse.getAuthenticationStatus());
+
+        modelAndView.addObject("messages", authenticationResponse.getAuthenticationStatus().toString());
+
+        return modelAndView;
+    }
+
+    @PostMapping("/register")
+    public ModelAndView postRegister(@RequestParam("username") String username,
+                                     HttpSession httpSession) {
+        logger.info(":: Register ::");
+
+
+        return null;
     }
 }

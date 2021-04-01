@@ -1,16 +1,25 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Home</title>
 
-    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-css"></div>
 
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"/>
+<form method="get" th:action="@{/custom-login}" class="navbar-form navbar-right">
+    <button id="home-button" type="submit" class="btn btn-done">Back to Login</button>
+</form>
+<form method="post" th:action="@{/logout}" class="navbar-form navbar-right">
+    <button id="logout-button" type="submit" class="btn btn-danger">Logout</button>
+</form>
 
 <div class="container">
+    <div class="alert alert-success">
+        Login Successful
+    </div>
+
     <p><label>Access Token: </label>
         <span th:text="${authenticationResponse.tokenResponse.accessToken}?: 'Not Available'">1</span></p>
 
@@ -33,9 +42,7 @@
         <span th:text="${authenticationResponse.errors}?: 'None'">1</span>
 </div>
 
-<!-- /.container -->
-
-<div th:replace="fragments/footer :: footer"/>
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>

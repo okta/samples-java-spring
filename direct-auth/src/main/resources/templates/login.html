@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en"><html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Sign In</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 
     <style>
         .login-form {
@@ -32,13 +31,22 @@
             font-size: 15px;
             font-weight: bold;
         }
+        .alignleft {
+            float: left;
+        }
+        .alignright {
+            float: right;
+        }
     </style>
 </head>
 
 <body>
 <div class="login-form">
     <form th:action="@{/custom-login}" method="post">
-        <h2 class="text-center">Sample App</h2>
+        <h2 class="text-center">Direct Auth Sample</h2>
+        <div th:if="${messages}" class="alert alert-danger">
+            <span th:text="${messages}">1</span>
+        </div>
         <div class="form-group">
             <input type="text" class="form-control" name="username" placeholder="Username" required="required">
         </div>
@@ -46,14 +54,15 @@
             <input type="password" class="form-control" name="password" placeholder="Password" required="required">
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <button id="sign-in-btn" type="submit" class="btn btn-primary btn-block">Sign In</button>
         </div>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <a class="alignleft" href="/forgot-password">Forgot Password?</a>
+        <a class="alignright" href="/register">Register</a>
     </form>
-    <a href="/forgot-password">Forgot Password?</a>
 </div>
 
-<div th:replace="fragments/footer :: footer"/>
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>
