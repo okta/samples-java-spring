@@ -125,8 +125,6 @@ public class LoginController {
         ChangePasswordOptions changePasswordOptions = new ChangePasswordOptions();
         changePasswordOptions.setNewPassword(newPassword);
 
-        logger.info("IdxClientContext == null? {}", idxClientContext == null);
-
         AuthenticationResponse authenticationResponse =
                 AuthenticationWrapper.changePassword(client, idxClientContext, changePasswordOptions);
 
