@@ -36,9 +36,7 @@
 
 <body>
 
-<form method="get" th:action="@{/custom-login}" class="navbar-form navbar-right">
-    <button id="home-button" type="submit" class="btn btn-done">Back to Login</button>
-</form>
+<a href="/custom-login" class="btn btn-info pull-left">Login Page</a>
 
 <div class="register-form">
     <form th:action="@{/register}" method="post">
@@ -52,7 +50,7 @@
         <div class="form-group">
             <button id="verify-btn" type="submit" class="btn btn-primary btn-block">Submit</button>
         </div>
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+<!--        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />-->
     </form>
 </div>
 

@@ -8,38 +8,51 @@
 </head>
 <body>
 
-<form method="get" th:action="@{/custom-login}" class="navbar-form navbar-right">
-    <button id="home-button" type="submit" class="btn btn-done">Back to Login</button>
-</form>
-<form method="post" th:action="@{/logout}" class="navbar-form navbar-right">
-    <button id="logout-button" type="submit" class="btn btn-danger">Logout</button>
-</form>
+<div th:if="${session.user}">
+    <a href="/logout" class="btn btn-danger pull-right">Logout</a>
+</div>
 
 <div class="container">
-    <div class="alert alert-success">
-        Login Successful
+
+    <div th:if="${session.user}" class="alert alert-success">
+        <p>Welcome, <span th:text="${session.user}"></span>!</p>
+        <p>You have successfully authenticated against your Okta Org.</p>
     </div>
 
-    <p><label>Access Token: </label>
-        <span th:text="${authenticationResponse.tokenResponse.accessToken}?: 'Not Available'">1</span></p>
+    <div th:if="${authenticationResponse.tokenResponse.accessToken}">
+        <p><label>Access Token: </label>
+            <span th:text="${authenticationResponse.tokenResponse.accessToken}">2</span></p>
+    </div>
 
-    <p><label>Expires In: </label>
-        <span th:text="${authenticationResponse.tokenResponse.expiresIn}?: 'Not Available'">1</span></p>
+    <div th:if="${authenticationResponse.tokenResponse.expiresIn}">
+        <p><label>Expires In: </label>
+            <span th:text="${authenticationResponse.tokenResponse.expiresIn}">1</span></p>
+    </div>
 
-    <p><label>ID Token: </label>
-        <span th:text="${authenticationResponse.tokenResponse.idToken}?: 'Not Available'">1</span></p>
+    <div th:if="${authenticationResponse.tokenResponse.idToken}">
+        <p><label>ID Token: </label>
+            <span th:text="${authenticationResponse.tokenResponse.idToken}">1</span></p>
+    </div>
 
-    <p><label>Refresh Token: </label>
-        <span th:text="${authenticationResponse.tokenResponse.refreshToken}?: 'Not Available'">1</span></p>
+    <div th:if="${authenticationResponse.tokenResponse.refreshToken}">
+        <p><label>Refresh Token: </label>
+            <span th:text="${authenticationResponse.tokenResponse.refreshToken}">1</span></p>
+    </div>
 
-    <p><label>Scope(s): </label>
-        <span th:text="${authenticationResponse.tokenResponse.scope}?: 'Not Available'">1</span></p>
+    <div th:if="${authenticationResponse.tokenResponse.scope}">
+        <p><label>Scope(s): </label>
+            <span th:text="${authenticationResponse.tokenResponse.scope}">1</span></p>
+    </div>
 
-    <p><label>Token Type: </label>
-        <span th:text="${authenticationResponse.tokenResponse.tokenType}?: 'Not Available'">1</span></p>
+    <div th:if="${authenticationResponse.tokenResponse.tokenType}">
+        <p><label>Token Type: </label>
+            <span th:text="${authenticationResponse.tokenResponse.tokenType}">1</span></p>
+    </div>
 
-    <p><label>Error(s): </label>
-        <span th:text="${authenticationResponse.errors}?: 'None'">1</span>
+    <div th:if="${authenticationResponse.errors}">
+        <p><label>Errors: </label>
+            <span th:text="${authenticationResponse.errors}">1</span></p>
+    </div>
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>

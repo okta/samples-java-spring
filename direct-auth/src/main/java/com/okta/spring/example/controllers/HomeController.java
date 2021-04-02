@@ -8,9 +8,10 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
+
     @GetMapping("/")
     public String home() {
-        return "home";
+        return "redirect:/custom-login";
     }
 
     @GetMapping(value = "/custom-login")
@@ -18,15 +19,15 @@ public class HomeController {
         return new ModelAndView("login");
     }
 
-    @GetMapping("/verify")
-    public String getVerify() {
-        return "verify";
-    }
-
-    @GetMapping("/change-password")
-    public String getChangePassword() {
-        return "verify";
-    }
+//    @GetMapping("/verify")
+//    public String getVerify() {
+//        return "verify";
+//    }
+//
+//    @GetMapping("/change-password")
+//    public String getChangePassword() {
+//        return "verify";
+//    }
 
     @GetMapping("/forgot-password")
     public ModelAndView getForgotPassword() {
@@ -38,8 +39,9 @@ public class HomeController {
         return new ModelAndView("register");
     }
 
-    @GetMapping("/403")
-    public String error403() {
-        return "403";
+    @GetMapping("/logout")
+    public String logout(HttpSession session ) {
+        session.invalidate();
+        return "redirect:/custom-login";
     }
 }

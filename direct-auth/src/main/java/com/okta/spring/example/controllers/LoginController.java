@@ -44,19 +44,37 @@ public class LoginController {
 
     @PostMapping("/custom-login")
     public ModelAndView postLogin(@RequestParam("username") String username,
-                                  @RequestParam("password") String password) {
+                                  @RequestParam("password") String password,
+                                  HttpSession session) {
 
         AuthenticationResponse authenticationResponse =
-                AuthenticationWrapper.authenticate(client, new AuthenticationOptions(username, password));
+                (AuthenticationResponse) session.getAttribute("authenticationResponse");
 
+        // render existing auth response if a successful one is already present in session
+        if (authenticationResponse != null &&
+            authenticationResponse.getAuthenticationStatus() == AuthenticationStatus.SUCCESS) {
+            ModelAndView mav = new ModelAndView("home");
+            mav.addObject("authenticationResponse", authenticationResponse);
+            return mav;
+        }
+
+        // trigger authentication
+        authenticationResponse = AuthenticationWrapper.authenticate(client, new AuthenticationOptions(username, password));
+
+        // populate login view with errors
         if (authenticationResponse.getAuthenticationStatus() != AuthenticationStatus.SUCCESS) {
             ModelAndView modelAndView = new ModelAndView("login");
             modelAndView.addObject("messages", authenticationResponse.getErrors());
             return modelAndView;
         }
 
+        // success
         ModelAndView mav = new ModelAndView("home");
         mav.addObject("authenticationResponse", authenticationResponse);
+
+        // store attributes in session
+        session.setAttribute("user", username);
+        session.setAttribute("authenticationResponse", authenticationResponse);
         return mav;
     }
 
@@ -70,6 +88,12 @@ public class LoginController {
         //TODO
         AuthenticationResponse authenticationResponse =
                 AuthenticationWrapper.recoverPassword(client, new RecoverPasswordOptions(username, AuthenticatorType.EMAIL));
+
+        if (authenticationResponse.getAuthenticationStatus() == null) {
+            ModelAndView mav = new ModelAndView("forgotpassword");
+            mav.addObject("result", authenticationResponse.getErrors());
+            return mav;
+        }
 
         logger.info("Authentication status: {}", authenticationResponse.getAuthenticationStatus());
 
