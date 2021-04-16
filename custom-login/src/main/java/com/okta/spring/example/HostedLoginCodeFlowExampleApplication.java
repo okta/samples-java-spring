@@ -15,6 +15,7 @@
  */
 package com.okta.spring.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.idx.sdk.api.client.Clients;
 import com.okta.idx.sdk.api.client.IDXClient;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,5 +72,15 @@ public class HostedLoginCodeFlowExampleApplication {
     @Bean
     public OAuth2AuthorizedClientService authorizedClientService() {
         return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

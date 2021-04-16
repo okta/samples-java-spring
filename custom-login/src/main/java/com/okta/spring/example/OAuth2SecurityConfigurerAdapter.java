@@ -32,7 +32,7 @@ public class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
                 .accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
 
                 .and().addFilterBefore(myFilter(), OAuth2LoginAuthenticationFilter.class).authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/", "/custom-login", "/css/**", "/authorization-code/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/custom-login", "/css/**").permitAll()
                 .anyRequest().authenticated()
 
                 // send the user back to the root page when they logout
@@ -45,8 +45,9 @@ public class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
     }
 
     @Bean
-    public MyFilter myFilter() throws Exception {
-        MyFilter myFilter = new MyFilter("/authorization-code/callback", authenticationManagerBean());
+    public CustomAuthenticationProcessingFilter myFilter() throws Exception {
+        CustomAuthenticationProcessingFilter myFilter =
+                new CustomAuthenticationProcessingFilter("/authorization-code/callback", authenticationManagerBean());
         myFilter.setAuthenticationDetailsSource(new WebAuthenticationDetailsSource());
         myFilter.setClientRegistrationRepository(clientRegistrationRepository);
         return myFilter;
