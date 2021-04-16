@@ -143,7 +143,8 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
 
     // helpers
 
-    private Map<String, Object> getUserAttributes(String uri, OAuth2AccessToken oAuth2AccessToken) throws JsonProcessingException {
+    private Map<String, Object> getUserAttributes(String uri, OAuth2AccessToken oAuth2AccessToken)
+            throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + oAuth2AccessToken.getTokenValue());
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));

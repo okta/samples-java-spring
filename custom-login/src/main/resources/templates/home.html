@@ -35,7 +35,6 @@
         <p>Welcome home, <span th:text="${#authentication.principal.attributes['name']}">Joe Coder</span>!</p>
         <p>You have successfully authenticated against your Okta org, and have been redirected back to this application.</p>
         <p>Visit the <a th:href="@{/profile}">My Profile</a> page in this application to view the information retrieved with your OAuth Access Token.</p>
-        <p><a th:href="@{/displaytokens}">View Token</a></p>
       </div>
 
         <form method="get" th:action="@{/oauth2/authorization/okta}" th:unless="${#authorization.expression('isAuthenticated()')}">
