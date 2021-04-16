@@ -95,7 +95,6 @@ public class LoginController {
         );
         mav.addObject(ISSUER_URI, issuer);
 
-        session.setAttribute("interactionHandle", idxClientContext.getInteractionHandle());
         session.setAttribute("codeVerifier", idxClientContext.getCodeVerifier());
         session.setAttribute("codeChallenge", idxClientContext.getCodeChallenge());
         return mav;
