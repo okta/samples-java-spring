@@ -19,10 +19,6 @@ import com.okta.idx.sdk.api.client.IDXClient;
 import com.okta.idx.sdk.api.exception.ProcessingException;
 import com.okta.idx.sdk.api.model.IDXClientContext;
 import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
-import com.okta.spring.example.HostedLoginCodeFlowExampleApplication;
-import com.okta.spring.example.PkceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +34,6 @@ import java.security.NoSuchAlgorithmException;
 @Controller
 public class LoginController {
 
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
-
     private static final String STATE = "state";
     private static final String NONCE = "nonce";
     private static final String SCOPES = "scopes";
@@ -47,6 +41,12 @@ public class LoginController {
     private static final String OKTA_CLIENT_ID = "oktaClientId";
     private static final String REDIRECT_URI = "redirectUri";
     private static final String ISSUER_URI = "issuerUri";
+    /* idx related properties */
+    private static final String INTERACTION_HANDLE = "interactionHandle";
+    private static final String CODE_VERIFIER = "codeVerifier";
+    private static final String CODE_CHALLENGE = "codeChallenge";
+    private static final String CODE_CHALLENGE_METHOD = "codeChallengeMethod";
+    private static final String CODE_CHALLENGE_METHOD_VALUE = "S256";
 
     private final OktaOAuth2Properties oktaOAuth2Properties;
 
@@ -65,9 +65,6 @@ public class LoginController {
 
         IDXClientContext idxClientContext = client.interact();
 
-        logger.info("== after interact === code verifier: {} code challenge: {}",
-                idxClientContext.getCodeVerifier(), idxClientContext.getCodeChallenge());
-
         // if we don't have the state parameter redirect
         if (state == null) {
             return new ModelAndView("redirect:" + oktaOAuth2Properties.getRedirectUri());
@@ -83,10 +80,10 @@ public class LoginController {
         mav.addObject(SCOPES, oktaOAuth2Properties.getScopes());
         mav.addObject(OKTA_BASE_URL, orgUrl);
         mav.addObject(OKTA_CLIENT_ID, oktaOAuth2Properties.getClientId());
-        mav.addObject("interactionHandle", idxClientContext.getInteractionHandle());
-        mav.addObject("codeVerifier", idxClientContext.getCodeVerifier());
-        mav.addObject("codeChallenge", idxClientContext.getCodeChallenge());
-        mav.addObject("codeChallengeMethod", PkceUtil.CODE_CHALLENGE_METHOD);
+        mav.addObject(INTERACTION_HANDLE, idxClientContext.getInteractionHandle());
+        mav.addObject(CODE_VERIFIER, idxClientContext.getCodeVerifier());
+        mav.addObject(CODE_CHALLENGE, idxClientContext.getCodeChallenge());
+        mav.addObject(CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_VALUE);
 
         // from ClientRegistration.redirectUriTemplate, if the template is change you must update this
         mav.addObject(REDIRECT_URI,
