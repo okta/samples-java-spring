@@ -61,6 +61,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -183,12 +184,15 @@ public class MyFilter extends AbstractAuthenticationProcessingFilter {
 
         OAuth2AuthorizationExchange oAuth2AuthorizationExchange = new OAuth2AuthorizationExchange(authorizationRequest, authorizationResponse);
 
+        String scopes = responseEntity.getBody().get("scope").textValue();
+        Set<String> scopesSet = new HashSet<>(Arrays.asList(scopes.split(" ")));
+
         OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(
                 OAuth2AccessToken.TokenType.BEARER,
                 accessTokenStr,
                 null,
                 Instant.now().plusMillis(Long.parseLong(responseEntity.getBody().get("expires_in").toString())),
-                new HashSet<>(Collections.singletonList(responseEntity.getBody().get("scope").textValue())));
+                scopesSet);
 
         //OAuth2UserRequest oAuth2UserRequest = new OAuth2UserRequest(clientRegistration, oAuth2AccessToken, Collections.emptyMap());
         //RequestEntity<?> req = this.requestEntityConverter.convert(oAuth2UserRequest);
@@ -211,7 +215,7 @@ public class MyFilter extends AbstractAuthenticationProcessingFilter {
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         authorities.add(new OAuth2UserAuthority(userAttributes));
         //OAuth2AccessToken token = oAuth2UserRequest.getAccessToken();
-        logger.info("=== SCOPES inside oAuth2AccessToken object == {}", oAuth2AccessToken.getScopes());
+        logger.info("=== SCOPES inside oAuth2AccessToken object == {}", oAuth2AccessToken.getScopes().size());
         for (String authority : oAuth2AccessToken.getScopes()) {
             logger.info("=== Authority == {}", authority);
             authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
