@@ -15,18 +15,26 @@
  */
 package com.okta.spring.example;
 
+import com.okta.idx.sdk.api.client.Clients;
+import com.okta.idx.sdk.api.client.IDXClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This example renders a custom login page (hosted within this application). You can use a standard login with less
@@ -42,6 +50,9 @@ public class HostedLoginCodeFlowExampleApplication {
         SpringApplication.run(HostedLoginCodeFlowExampleApplication.class, args);
     }
 
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+
     /**
      * Create an ApplicationListener that listens for successful logins and simply just logs the principal name.
      * @return a new listener
@@ -51,26 +62,13 @@ public class HostedLoginCodeFlowExampleApplication {
         return event -> logger.info("Authentication Success with principal: {}", event.getAuthentication().getPrincipal());
     }
 
-    @Configuration
-    static class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @Bean
+    public IDXClient idxClient() {
+        return Clients.builder().build();
+    }
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                .exceptionHandling()
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
-
-                .and().authorizeRequests()
-                        .antMatchers(HttpMethod.GET,"/", "/custom-login", "/css/**").permitAll()
-                        .anyRequest().authenticated()
-
-                 // send the user back to the root page when they logout
-                .and()
-                    .logout().logoutSuccessUrl("/")
-
-                .and().oauth2Client()
-                .and().oauth2Login().redirectionEndpoint()
-                    .baseUri("/authorization-code/callback*");
-        }
+    @Bean
+    public OAuth2AuthorizedClientService authorizedClientService() {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
     }
 }

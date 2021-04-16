@@ -1,6 +1,13 @@
 server:
   port: 8080
 
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web.client.RestTemplate: TRACE
+    org.apache.http.wire: TRACE
+
 spring:
   security:
     oauth2:

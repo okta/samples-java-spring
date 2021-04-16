@@ -18,37 +18,40 @@
     <title>Login</title>
     <!--/*/ <th:block th:include="head :: head"/> /*/-->
 
-    <script src="https://global.oktacdn.com/okta-signin-widget/5.4.2/js/okta-sign-in.min.js" type="text/javascript"></script>
-    <link href="https://global.oktacdn.com/okta-signin-widget/5.4.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <script src="https://global.oktacdn.com/okta-signin-widget/5.5.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/5.5.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body class="login">
   <div id="sign-in-widget"></div>
 
-<script th:inline="javascript">
-/*<![CDATA[*/
+  <script th:inline="javascript">
+      /*<![CDATA[*/
 
-var config = {};
+      var config = {};
 
-config.baseUrl = /*[[${oktaBaseUrl}]]*/ 'https://{yourOktaDomain}';
-config.clientId = /*[[${oktaClientId}]]*/ '{clientId}';
-config.redirectUri = /*[[${redirectUri}]]*/ '{redirectUri}';
-config.authParams = {
-  issuer: /*[[${issuerUri}]]*/ '{issuerUri}',
-  responseType: 'code',
-  pkce: false,
-  state: /*[[${state}]]*/ '{state}' || false,
-  nonce: /*[[${nonce}]]*/ '{nonce}',
-  scopes: /*[[${scopes}]]*/ '[scopes]',
-  display: 'page'
-};
+      config.baseUrl = /*[[${oktaBaseUrl}]]*/ 'https://{yourOktaDomain}';
+      config.clientId = /*[[${oktaClientId}]]*/ '{clientId}';
+      config.redirectUri = /*[[${redirectUri}]]*/ '{redirectUri}';
+      config.useInteractionCodeFlow = 'true';
+      config.interactionHandle = /*[[${interactionHandle}]]*/ '{interactionHandle}';
+      config.codeChallenge = /*[[${codeChallenge}]]*/ '{codeChallenge}';
+      config.codeChallengeMethod = /*[[${codeChallengeMethod}]]*/ '{codeChallengeMethod}';
+      config.redirect = 'always';
+      config.authParams = {
+          issuer: /*[[${issuerUri}]]*/ '{issuerUri}',
+          pkce: true,
+          state: /*[[${state}]]*/ '{state}' || false,
+          nonce: /*[[${nonce}]]*/ '{nonce}',
+          scopes: /*[[${scopes}]]*/ '[scopes]',
+      };
 
-new OktaSignIn(config).renderEl(
-  { el: '#sign-in-widget' },
-  function (res) {}
-);
-/*]]>*/
-</script>
+      new OktaSignIn(config).showSignInAndRedirect(
+          { el: '#sign-in-widget' },
+          function (res) {}
+      );
+      /*]]>*/
+  </script>
 
 </body>
 </html>
