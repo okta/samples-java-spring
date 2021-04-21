@@ -36,11 +36,8 @@ cd self-hosted
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={clientId} \
     -Dokta.oauth2.clientSecret={clientSecret} \
-    -Dokta.idx.issuer=https://{yourOktaDomain}/oauth2/default \
-    -Dokta.idx.clientId={clientId} \
-    -Dokta.idx.clientSecret={clientSecret} \
-    -Dokta.idx.scopes={scopes} \
-    -Dokta.idx.redirectUri={redirectUri}
+    -Dokta.idx.scopes={scopes} \   # e.g. "openid email profile"
+    -Dokta.idx.redirectUri={redirectUri} # should match with what is set in app settings
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead, we recommend you store them as environment variables. For example:
