@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+
 spring:
   security:
     oauth2:
