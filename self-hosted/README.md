@@ -1,6 +1,6 @@
 # Okta Spring Security & Self Hosted Login Page Example
 
-This example shows you how to use the [Okta Spring Boot Library][] to login a user.  The login is achieved through the [Authorization Code Flow][] using the [Okta Sign In Widget][], which gives you more control to customize the login experience within your app.  After the user authenticates, they are redirected back to the application and a local cookie session is created.
+This example shows you how to use the [Okta Spring Boot Library][] to login a user.  The login is achieved through the Interaction Code flow using the [Okta Sign In Widget][], which gives you more control to customize the login experience within your app.  After the user authenticates, they are redirected back to the application and a local cookie session is created.
 
 
 ## Prerequisites
@@ -46,6 +46,8 @@ mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
 export OKTA_OAUTH2_ISSUER=https://{yourOktaDomain}/oauth2/default
 export OKTA_OAUTH2_CLIENT_ID={clientId}
 export OKTA_OAUTH2_CLIENT_SECRET={clientSecret}
+export OKTA_IDX_SCOPES={scopes}
+export OKTA_IDX_REDIRECTURI={redirectUri}
 ```
 
 Then you can simply use `mvn` to start your app.
