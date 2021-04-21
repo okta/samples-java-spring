@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.commons.lang.Strings;
+import com.okta.idx.sdk.impl.util.ClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.net.MalformedURLException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,9 +56,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CustomAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
+import static com.okta.idx.sdk.impl.util.ClientUtil.isRootOrgIssuer;
 
-    private final Logger logger = LoggerFactory.getLogger(CustomAuthenticationProcessingFilter.class);
+public class CustomAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository =
             new HttpSessionOAuth2AuthorizationRequestRepository();
@@ -88,8 +90,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response)
-            throws AuthenticationException, JsonProcessingException {
-        logger.info("======= attemptAuthentication ====== ");
+            throws AuthenticationException, JsonProcessingException, MalformedURLException {
 
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
@@ -156,7 +157,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
         return userAttributes;
     }
 
-    private JsonNode exchangeCodeForToken(String interactionCode, String codeVerifier) {
+    private JsonNode exchangeCodeForToken(String interactionCode, String codeVerifier) throws MalformedURLException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -171,8 +172,9 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
         map.add("code_verifier", codeVerifier);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(map, headers);
+        String tokenUri = isRootOrgIssuer(issuer) ? issuer + "/oauth2/v1/token" : issuer + "/v1/token";
         ResponseEntity<JsonNode> responseEntity =
-                restTemplate.postForEntity(issuer + "/v1/token", requestEntity, JsonNode.class);
+                restTemplate.postForEntity(tokenUri, requestEntity, JsonNode.class);
 
         return responseEntity.getBody();
     }
