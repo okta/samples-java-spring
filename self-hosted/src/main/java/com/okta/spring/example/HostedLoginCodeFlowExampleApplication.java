@@ -21,22 +21,22 @@ import com.okta.idx.sdk.api.client.IDXClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * This example renders a self-hosted login page (hosted within this application). You can use a standard login with less
@@ -55,6 +55,21 @@ public class HostedLoginCodeFlowExampleApplication {
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
 
+    @Value("${okta.oauth2.issuer}")
+    private String issuer;
+
+    @Value("${okta.oauth2.clientId}")
+    private String clientId;
+
+    @Value("${okta.oauth2.clientSecret}")
+    private String clientSecret;
+
+    @Value("${okta.idx.scopes}")
+    private String scopes;
+
+    @Value("${okta.oauth2.redirectUri}")
+    private String redirectUri;
+
     /**
      * Create an ApplicationListener that listens for successful logins and simply just logs the principal name.
      * @return a new listener
@@ -66,7 +81,13 @@ public class HostedLoginCodeFlowExampleApplication {
 
     @Bean
     public IDXClient idxClient() {
-        return Clients.builder().build();
+        return Clients.builder()
+                .setIssuer(issuer)
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setScopes(new HashSet<>(Arrays.asList(scopes.split(" "))))
+                .setRedirectUri(redirectUri)
+                .build();
     }
 
     @Bean

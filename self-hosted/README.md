@@ -1,4 +1,4 @@
-# Okta Spring Security & Custom Login Page Example
+# Okta Spring Security & Self Hosted Login Page Example
 
 This example shows you how to use the [Okta Spring Boot Library][] to login a user.  The login is achieved through the [Authorization Code Flow][] using the [Okta Sign In Widget][], which gives you more control to customize the login experience within your app.  After the user authenticates, they are redirected back to the application and a local cookie session is created.
 
@@ -32,10 +32,15 @@ You also need to gather the following information from the Okta Developer Consol
 Plug these values into the `mvn` commands used to start the application.
 
 ```bash
-cd custom-login
+cd self-hosted
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={clientId} \
-    -Dokta.oauth2.clientSecret={clientSecret}
+    -Dokta.oauth2.clientSecret={clientSecret} \
+    -Dokta.idx.issuer=https://{yourOktaDomain}/oauth2/default \
+    -Dokta.idx.clientId={clientId} \
+    -Dokta.idx.clientSecret={clientSecret} \
+    -Dokta.idx.scopes={scopes} \
+    -Dokta.idx.redirectUri={redirectUri}
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead, we recommend you store them as environment variables. For example:
