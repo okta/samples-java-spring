@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.commons.lang.Strings;
-import com.okta.idx.sdk.impl.util.ClientUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.okta.idx.sdk.api.util.ClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -56,11 +54,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.okta.idx.sdk.impl.util.ClientUtil.isRootOrgIssuer;
-
 public class CustomAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository =
+    private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository =
             new HttpSessionOAuth2AuthorizationRequestRepository();
 
     private ClientRegistrationRepository clientRegistrationRepository;
@@ -80,7 +76,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
     @Autowired
     private RestTemplate restTemplate;
 
-    private GrantedAuthoritiesMapper authoritiesMapper = ((authorities) -> authorities);
+    private final GrantedAuthoritiesMapper authoritiesMapper = ((authorities) -> authorities);
 
     protected CustomAuthenticationProcessingFilter(String defaultFilterProcessesUrl,
                                                    AuthenticationManager authenticationManager) {
@@ -153,8 +149,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
         ResponseEntity<String> respEntity =
                 restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
 
-        Map<String, Object> userAttributes = objectMapper.readValue(respEntity.getBody(), Map.class);
-        return userAttributes;
+        return objectMapper.readValue(respEntity.getBody(), Map.class);
     }
 
     private JsonNode exchangeCodeForToken(String interactionCode, String codeVerifier) throws MalformedURLException {
@@ -172,7 +167,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
         map.add("code_verifier", codeVerifier);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(map, headers);
-        String tokenUri = isRootOrgIssuer(issuer) ? issuer + "/oauth2/v1/token" : issuer + "/v1/token";
+        String tokenUri = ClientUtil.getNormalizedUri(issuer, "/v1/token");
         ResponseEntity<JsonNode> responseEntity =
                 restTemplate.postForEntity(tokenUri, requestEntity, JsonNode.class);
 
