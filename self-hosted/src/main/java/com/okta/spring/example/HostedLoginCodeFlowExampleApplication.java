@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta, Inc.
+ * Copyright 2021-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package com.okta.spring.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.idx.sdk.api.client.Clients;
-import com.okta.idx.sdk.api.client.IDXClient;
+import com.okta.idx.sdk.api.client.IDXAuthenticationWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 /**
  * This example renders a self-hosted login page (hosted within this application). You can use a standard login with less
@@ -80,14 +77,9 @@ public class HostedLoginCodeFlowExampleApplication {
     }
 
     @Bean
-    public IDXClient idxClient() {
-        return Clients.builder()
-                .setIssuer(issuer)
-                .setClientId(clientId)
-                .setClientSecret(clientSecret)
-                .setScopes(new HashSet<>(Arrays.asList(scopes.split(" "))))
-                .setRedirectUri(redirectUri)
-                .build();
+    public IDXAuthenticationWrapper idxClient() {
+        return new IDXAuthenticationWrapper(issuer, clientId, clientSecret,
+                new HashSet<>(Arrays.asList(scopes.split(" "))),redirectUri);
     }
 
     @Bean

@@ -15,6 +15,7 @@
  */
 package com.okta.spring.example.controllers;
 
+import com.okta.idx.sdk.api.client.IDXAuthenticationWrapper;
 import com.okta.idx.sdk.api.client.IDXClient;
 import com.okta.idx.sdk.api.exception.ProcessingException;
 import com.okta.idx.sdk.api.model.IDXClientContext;
@@ -51,7 +52,7 @@ public class LoginController {
     private final OktaOAuth2Properties oktaOAuth2Properties;
 
     @Autowired
-    private IDXClient client;
+    private IDXAuthenticationWrapper idxAuthenticationWrapper;
 
     public LoginController(OktaOAuth2Properties oktaOAuth2Properties) {
         this.oktaOAuth2Properties = oktaOAuth2Properties;
@@ -63,7 +64,7 @@ public class LoginController {
                               @RequestParam(name = "nonce") String nonce,
                               HttpSession session) throws MalformedURLException, NoSuchAlgorithmException, ProcessingException {
 
-        IDXClientContext idxClientContext = client.interact();
+        IDXClientContext idxClientContext = idxAuthenticationWrapper.getClientContext();
 
         // if we don't have the state parameter redirect
         if (state == null) {

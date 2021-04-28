@@ -37,7 +37,7 @@ mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={clientId} \
     -Dokta.oauth2.clientSecret={clientSecret} \
     -Dokta.idx.scopes={scopes} \   # e.g. "openid email profile"
-    -Dokta.idx.redirectUri={redirectUri} # should match with what is set in app settings
+    -Dokta.oauth2.redirectUri={redirectUri} # should match with what is set in app settings
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead, we recommend you store them as environment variables. For example:
@@ -47,7 +47,7 @@ export OKTA_OAUTH2_ISSUER=https://{yourOktaDomain}/oauth2/default
 export OKTA_OAUTH2_CLIENT_ID={clientId}
 export OKTA_OAUTH2_CLIENT_SECRET={clientSecret}
 export OKTA_IDX_SCOPES={scopes}
-export OKTA_IDX_REDIRECTURI={redirectUri}
+export OKTA_OAUTH2_REDIRECTURI={redirectUri}
 ```
 
 Then you can simply use `mvn` to start your app.
