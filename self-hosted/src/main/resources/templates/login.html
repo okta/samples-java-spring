@@ -47,8 +47,6 @@
           scopes: /*[[${scopes}]]*/ '[scopes]',
       };
 
-      console.log("initializing widget with interaction handle: " + config.interactionHandle);
-
       new OktaSignIn(config).showSignInAndRedirect(
           { el: '#sign-in-widget' },
           function (res) {}
