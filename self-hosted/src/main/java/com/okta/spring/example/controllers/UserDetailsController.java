@@ -10,6 +10,7 @@ import java.util.Collections;
 
 @Controller
 public class UserDetailsController {
+
     @GetMapping("/profile")
     @PreAuthorize("hasAuthority('SCOPE_profile')")
     public ModelAndView userDetails(OAuth2AuthenticationToken authentication) {

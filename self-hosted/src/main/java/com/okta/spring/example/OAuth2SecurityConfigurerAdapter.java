@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021-Present Okta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.okta.spring.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +24,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 public class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
@@ -31,7 +44,8 @@ public class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
                 .exceptionHandling()
                 .accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
 
-                .and().addFilterBefore(myFilter(), OAuth2LoginAuthenticationFilter.class).authorizeRequests()
+                .and().addFilterBefore(customAuthenticationProcessingFilter(), OAuth2LoginAuthenticationFilter.class)
+                .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/", "/custom-login", "/css/**").permitAll()
                 .anyRequest().authenticated()
 
@@ -45,11 +59,12 @@ public class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
     }
 
     @Bean
-    public CustomAuthenticationProcessingFilter myFilter() throws Exception {
-        CustomAuthenticationProcessingFilter myFilter =
-                new CustomAuthenticationProcessingFilter("/authorization-code/callback", authenticationManagerBean());
-        myFilter.setAuthenticationDetailsSource(new WebAuthenticationDetailsSource());
-        myFilter.setClientRegistrationRepository(clientRegistrationRepository);
-        return myFilter;
+    public CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter() throws Exception {
+        CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter =
+                new CustomAuthenticationProcessingFilter("/authorization-code/callback",
+                        authenticationManagerBean());
+        customAuthenticationProcessingFilter.setAuthenticationDetailsSource(new WebAuthenticationDetailsSource());
+        customAuthenticationProcessingFilter.setClientRegistrationRepository(clientRegistrationRepository);
+        return customAuthenticationProcessingFilter;
     }
 }

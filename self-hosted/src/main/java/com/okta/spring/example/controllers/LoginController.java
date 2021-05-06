@@ -48,6 +48,7 @@ public class LoginController {
     private static final String CODE_CHALLENGE = "codeChallenge";
     private static final String CODE_CHALLENGE_METHOD = "codeChallengeMethod";
     private static final String CODE_CHALLENGE_METHOD_VALUE = "S256";
+    private static final String IDX_CLIENT_CONTEXT = "idxClientContext";
 
     private final OktaOAuth2Properties oktaOAuth2Properties;
 
@@ -66,9 +67,9 @@ public class LoginController {
                               @RequestParam(name = "nonce") String nonce,
                               HttpSession session) throws MalformedURLException, NoSuchAlgorithmException {
 
-        if (session.getAttribute("idxClientContext") == null) {
+        if (session.getAttribute(IDX_CLIENT_CONTEXT) == null) {
             idxClientContext = idxAuthenticationWrapper.getClientContext();
-            session.setAttribute("idxClientContext", idxClientContext);
+            session.setAttribute(IDX_CLIENT_CONTEXT, idxClientContext);
         }
 
         // if we don't have the state parameter redirect
