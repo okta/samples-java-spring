@@ -16,10 +16,10 @@
 package com.okta.spring.example.controllers;
 
 import com.okta.idx.sdk.api.client.IDXAuthenticationWrapper;
-import com.okta.idx.sdk.api.client.IDXClient;
-import com.okta.idx.sdk.api.exception.ProcessingException;
 import com.okta.idx.sdk.api.model.IDXClientContext;
 import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +54,8 @@ public class LoginController {
     @Autowired
     private IDXAuthenticationWrapper idxAuthenticationWrapper;
 
+    private IDXClientContext idxClientContext;
+
     public LoginController(OktaOAuth2Properties oktaOAuth2Properties) {
         this.oktaOAuth2Properties = oktaOAuth2Properties;
     }
@@ -62,9 +64,12 @@ public class LoginController {
     public ModelAndView login(HttpServletRequest request,
                               @RequestParam(name = "state", required = false) String state,
                               @RequestParam(name = "nonce") String nonce,
-                              HttpSession session) throws MalformedURLException, NoSuchAlgorithmException, ProcessingException {
+                              HttpSession session) throws MalformedURLException, NoSuchAlgorithmException {
 
-        IDXClientContext idxClientContext = idxAuthenticationWrapper.getClientContext();
+        if (session.getAttribute("idxClientContext") == null) {
+            idxClientContext = idxAuthenticationWrapper.getClientContext();
+            session.setAttribute("idxClientContext", idxClientContext);
+        }
 
         // if we don't have the state parameter redirect
         if (state == null) {
@@ -94,12 +99,13 @@ public class LoginController {
         mav.addObject(ISSUER_URI, issuer);
 
         session.setAttribute(CODE_VERIFIER, idxClientContext.getCodeVerifier());
-        session.setAttribute(CODE_CHALLENGE, idxClientContext.getCodeChallenge());
+        //session.setAttribute(CODE_CHALLENGE, idxClientContext.getCodeChallenge());
         return mav;
     }
 
     @GetMapping("/post-logout")
-    public String logout() {
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "logout";
     }
 

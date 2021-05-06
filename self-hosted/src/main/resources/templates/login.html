@@ -19,8 +19,8 @@
     <title>Login</title>
     <!--/*/ <th:block th:include="head :: head"/> /*/-->
 
-    <script src="https://global.oktacdn.com/okta-signin-widget/5.5.2/js/okta-sign-in.min.js" type="text/javascript"></script>
-    <link href="https://global.oktacdn.com/okta-signin-widget/5.5.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <script src="https://global.oktacdn.com/okta-signin-widget/5.5.4/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/5.5.4/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body class="login">
@@ -34,7 +34,7 @@
       config.baseUrl = /*[[${oktaBaseUrl}]]*/ 'https://{yourOktaDomain}';
       config.clientId = /*[[${oktaClientId}]]*/ '{clientId}';
       config.redirectUri = /*[[${redirectUri}]]*/ '{redirectUri}';
-      config.useInteractionCodeFlow = 'true';
+      config.useInteractionCodeFlow = true;
       config.interactionHandle = /*[[${interactionHandle}]]*/ '{interactionHandle}';
       config.codeChallenge = /*[[${codeChallenge}]]*/ '{codeChallenge}';
       config.codeChallengeMethod = /*[[${codeChallengeMethod}]]*/ '{codeChallengeMethod}';
@@ -46,6 +46,8 @@
           nonce: /*[[${nonce}]]*/ '{nonce}',
           scopes: /*[[${scopes}]]*/ '[scopes]',
       };
+
+      console.log("initializing widget with interaction handle: " + config.interactionHandle);
 
       new OktaSignIn(config).showSignInAndRedirect(
           { el: '#sign-in-widget' },

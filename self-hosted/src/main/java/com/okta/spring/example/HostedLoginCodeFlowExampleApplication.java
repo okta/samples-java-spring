@@ -88,6 +88,11 @@ public class HostedLoginCodeFlowExampleApplication {
     }
 
     @Bean
+    public HelperUtil helperUtil() {
+        return new HelperUtil(issuer, clientId, clientSecret, objectMapper(), restTemplate());
+    }
+
+    @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
