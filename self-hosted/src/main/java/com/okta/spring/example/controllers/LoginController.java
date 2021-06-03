@@ -16,7 +16,9 @@
 package com.okta.spring.example.controllers;
 
 import com.okta.idx.sdk.api.client.IDXAuthenticationWrapper;
+import com.okta.idx.sdk.api.exception.ProcessingException;
 import com.okta.idx.sdk.api.model.IDXClientContext;
+import com.okta.idx.sdk.api.response.ErrorResponse;
 import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,8 +68,26 @@ public class LoginController {
                               HttpSession session) throws MalformedURLException, NoSuchAlgorithmException {
 
         if (session.getAttribute(IDX_CLIENT_CONTEXT) == null) {
-            idxClientContext = idxAuthenticationWrapper.getClientContext();
+            try {
+                idxClientContext = idxAuthenticationWrapper.getClientContext();
+            } catch (ProcessingException e) {
+                ModelAndView modelAndView = new ModelAndView("error");
+                ErrorResponse errorResponse = e.getErrorResponse();
+                if (errorResponse != null) {
+                    modelAndView.addObject("errorDetails",
+                            errorResponse.getError() + "," + errorResponse.getErrorDescription());
+                } else {
+                    modelAndView.addObject("errorDetails", "Unknown error");
+                }
+                return modelAndView;
+            }
             session.setAttribute(IDX_CLIENT_CONTEXT, idxClientContext);
+        }
+
+        if (idxClientContext == null) {
+            ModelAndView modelAndView = new ModelAndView("error");
+            modelAndView.addObject("error_details", "Unknown error");
+            return modelAndView;
         }
 
         // if we don't have the state parameter redirect
