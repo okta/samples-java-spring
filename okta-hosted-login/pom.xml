@@ -87,13 +87,13 @@
                 <dependency>
                     <groupId>com.okta.oidc.tck</groupId>
                     <artifactId>okta-oidc-tck</artifactId>
-                    <version>0.5.5</version>
+                    <version>0.5.7</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.codehaus.groovy</groupId>
                     <artifactId>groovy</artifactId>
-                    <version>2.5.14</version>
+                    <version>3.0.7</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
