@@ -12,6 +12,7 @@ public
 .idea/
 *.iml
 *.iws
+*.ipr
 
 # Maven
 .classpath
