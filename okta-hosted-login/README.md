@@ -35,7 +35,7 @@ This could either be an Org Authorization Server URL or Custom Authorization Ser
 
 [Custom Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#custom-authorization-server) - Okta provides a pre-configured Custom Authorization Server called `default`. It includes a basic access policy and a rule to quickly get you started. The issuer for this Authorization server type would be `https://{yourOktaOrg}/oauth2/default`.
 
-Okta allows you to create custom "default" authorization server types that you can use to protect your own resource servers. Within each authorization server, you can define your own custom OAuth 2.0 `scopes`, `claims`, and `policies` to support authorization for your APIs. An access token that is minted by this Authorization Server type is consumed by your APIs. The issuer for this authorization server type would take the form: `https://${yourOktaOrg}/oauth2/<authorizationServerId>/`
+Okta allows you to create custom "default" authorization server types that you can use to protect your own resource servers. Within each authorization server, you can define your own custom OAuth 2.0 `scopes`, `claims`, and `policies` to support authorization for your APIs. An access token that is minted by this Authorization Server type is consumed by your APIs. The issuer for this authorization server type would take the form: `https://{yourOktaOrg}/oauth2/<authorizationServerId>/`
 
 Refer [here](https://developer.okta.com/docs/concepts/auth-servers/#which-authorization-server-should-you-use) for more insights on choosing the right authorization server for your application.
 
