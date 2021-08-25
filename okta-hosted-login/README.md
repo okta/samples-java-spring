@@ -27,7 +27,17 @@ You also need to gather the following information from the Okta Developer Consol
 
 - **Client ID** and **Client Secret** - These can be found on the "General" tab of the Web application that you created earlier in the Okta Developer Console.
 
-- **Issuer** - This is the URL of the authorization server that will perform authentication.  All Developer Accounts have a "default" authorization server.  The issuer is a combination of your Org URL (found in the upper right of the console home page) and `/oauth2/default`. For example, `https://dev-1234.oktapreview.com/oauth2/default`.
+- **Issuer** - This is the URL of the [authorization server](https://developer.okta.com/docs/concepts/auth-servers/#available-authorization-server-types) that will perform authentication.
+
+This could either be an Org Authorization Server URL or Custom Authorization Server URL. 
+
+[Org Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) - Every Okta org would have this built-in authorization server. The issuer for this Authorization Server type would be `https://${yourOktaOrg}`. The `audience`, `claims`, `policies`, and `scope` OAuth 2.0 parameters of this authorization server cannot be customized. An access token that is minted by this authorization server type can only be consumed and validated by Okta. The access token cannot be used or validated by your own applications.
+
+[Custom Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#custom-authorization-server) - Okta provides a pre-configured Custom Authorization Server called `default`. It includes a basic access policy and a rule to quickly get you started. The issuer for this Authorization server type would be `https://${yourOktaDomain}/oauth2/default`.
+
+Okta allows you to create custom "default" authorization server types that you can use to protect your own resource servers. Within each authorization server, you can define your own custom OAuth 2.0 `scopes`, `claims`, and `policies` to support authorization for your APIs. An access token that is minted by this Authorization Server type is consumed by your APIs. The issuer for this authorization server type would take the form: `https://${yourOktaDomain}/oauth2/<authorizationServer Id>/`
+
+Refer [here](https://developer.okta.com/docs/concepts/auth-servers/#which-authorization-server-should-you-use) for more insights on choosing the right authorization server for your application.
 
 Plug these values into the `mvn` commands used to start the application.
 
