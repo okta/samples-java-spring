@@ -23,6 +23,8 @@
 
     <div id="content" class="container">
 
+      <p>Click <a th:href="@{/enroll}">here</a> to enroll authenticator.</p>
+
       <div>
         <h2>My Profile</h2>
         <p>Hello, <span th:text="${#authentication.principal.attributes['name']}">Joe Coder</span>. Below is the information that was read with your <a href="https://developer.okta.com/docs/api/resources/oidc.html#get-user-information">Access Token</a>.
