@@ -1,5 +1,6 @@
 package com.okta.spring.example;
 
+import com.okta.spring.boot.oauth.OktaOAuth2CustomParam;
 import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,23 +9,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
 
@@ -47,8 +45,8 @@ public class CodeFlowExampleApplication {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    // allow antonymous access to the root page
-                    .antMatchers("/", "/enroll*").permitAll()
+                    // allow anonymous access to the root page
+                    .antMatchers("/", "/callback/**").permitAll()
                     // all other requests
                     .anyRequest().authenticated()
 
@@ -98,21 +96,21 @@ public class CodeFlowExampleApplication {
 
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(oktaOAuth2Properties.getIssuer() + "/v1/authorize?");
-            stringBuffer.append("response_type=" + "none");
+            stringBuffer.append(OAuth2ParameterNames.RESPONSE_TYPE + "=" + "none");
             stringBuffer.append("&");
-            stringBuffer.append("state=" + "state12345");
+            stringBuffer.append(OAuth2ParameterNames.CLIENT_ID + "=").append(oktaOAuth2Properties.getClientId());
             stringBuffer.append("&");
-            stringBuffer.append("client_id=" + oktaOAuth2Properties.getClientId());
+            stringBuffer.append(OktaOAuth2CustomParam.ACR_VALUES + "=" + oktaOAuth2Properties.getAcrValues());
             stringBuffer.append("&");
-            stringBuffer.append("acr_values=" + oktaOAuth2Properties.getAcrValues());
+            stringBuffer.append(OktaOAuth2CustomParam.ENROLL_AMR_VALUES + "=" + URLEncoder.encode(oktaOAuth2Properties.getEnrollAmrValues(), "UTF-8"));
             stringBuffer.append("&");
-            stringBuffer.append("enroll_amr_values=" + URLEncoder.encode(oktaOAuth2Properties.getEnrollAmrValues(), "UTF-8"));
+            stringBuffer.append(OktaOAuth2CustomParam.PROMPT + "=" + "enroll_authenticator");
             stringBuffer.append("&");
-            stringBuffer.append("prompt=" + "enroll_authenticator");
+            stringBuffer.append(OAuth2ParameterNames.STATE + "=" + "state12345"); // should not matter?
             stringBuffer.append("&");
-            stringBuffer.append("max_age=" + "0");
+            stringBuffer.append(OktaOAuth2CustomParam.MAX_AGE + "=" + "0");
             stringBuffer.append("&");
-            stringBuffer.append("redirect_uri=" + oktaOAuth2Properties.getEnrollmentCallbackUri());
+            stringBuffer.append(OAuth2ParameterNames.REDIRECT_URI + "=" + oktaOAuth2Properties.getEnrollmentCallbackUri());
 
             logger.info("Sending Authorize request to: {}", stringBuffer);
 
@@ -123,9 +121,9 @@ public class CodeFlowExampleApplication {
             return new ModelAndView("userProfile" , Collections.singletonMap("details", authentication.getPrincipal().getAttributes()));
         }
 
-        @GetMapping("/enroll-callback")
+        @GetMapping("/callback/enroll")
         public ModelAndView handleEnrollCallback(HttpServletRequest request) {
-            logger.info("Enroll Callback Received: {}", request.getQueryString());
+            logger.info("Enroll callback received with query string: {}", request.getQueryString());
             return new ModelAndView("home");
         }
     }
