@@ -58,13 +58,17 @@ export OKTA_OAUTH2_CLIENT_SECRET={clientSecret}
 export OKTA_OAUTH2_POST_LOGOUT_REDIRECT_URI={absoluteLogoutRedirectUri}
 ```
 
-Specifying the `acrValues`, `enrollAmrValues` and `enrollmentCallbackUri` parameters (optional) for Enroll Authenticator flow:
+Authenticator Enrollment Flow:
+
+Optional params `acrValues`, `enrollAmrValues` and `enrollmentCallbackUri` parameters could be specified for Authenticator enrollment flow:
 
 | Parameter               | Description                                                                                                              | Required? |
 |-------------------------|--------------------------------------------------------------------------------------------------------------------------| ------- |
 | `acrValues`             | When included in the Authorize request, increases the level of user assurance. e.g. urn:okta:loa:2fa:any:ifpossible      | No |
 | `enrollAmrValues`       | A space-delimited, case-sensitive string that represents a list of authenticator method references. e.g. sms okta_verify | No |
 | `enrollmentCallbackUri` | URI to which Okta should send the enrollment callback result to. e.g. /callback/enroll                                   | No |
+
+For more details, refer [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
 
 Usage:
 
@@ -73,7 +77,7 @@ cd okta-hosted-login
 mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
     -Dokta.oauth2.clientId={clientId} \
     -Dokta.oauth2.clientSecret={clientSecret} \
-    -DacrValues={acr values} \
+    -DacrValues={acr values} \ 
     -DenrollAmrValues="enroll amr values" \
     -DenrollmentCallbackUri="callback uri for enrollment"
 ```
