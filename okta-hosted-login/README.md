@@ -58,6 +58,26 @@ export OKTA_OAUTH2_CLIENT_SECRET={clientSecret}
 export OKTA_OAUTH2_POST_LOGOUT_REDIRECT_URI={absoluteLogoutRedirectUri}
 ```
 
+Specifying the `acrValues`, `enrollAmrValues` and `enrollmentCallbackUri` parameters (optional) for Enroll Authenticator flow:
+
+| Parameter               | Description                                                                                                              | Required? |
+|-------------------------|--------------------------------------------------------------------------------------------------------------------------| ------- |
+| `acrValues`             | When included in the Authorize request, increases the level of user assurance. e.g. urn:okta:loa:2fa:any:ifpossible      | No |
+| `enrollAmrValues`       | A space-delimited, case-sensitive string that represents a list of authenticator method references. e.g. sms okta_verify | No |
+| `enrollmentCallbackUri` | URI to which Okta should send the enrollment callback result to. e.g. /callback/enroll                                   | No |
+
+Usage:
+
+```
+cd okta-hosted-login
+mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
+    -Dokta.oauth2.clientId={clientId} \
+    -Dokta.oauth2.clientSecret={clientSecret} \
+    -DacrValues={acr values} \
+    -DenrollAmrValues="enroll amr values" \
+    -DenrollmentCallbackUri="callback uri for enrollment"
+```
+
 Now navigate to http://localhost:8080 in your browser.
 
 If you see a home page that prompts you to login, then things are working!  Clicking the **Login** button will redirect you to the Okta hosted sign-in page.
