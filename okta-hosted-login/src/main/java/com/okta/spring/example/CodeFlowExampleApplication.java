@@ -1,10 +1,10 @@
 package com.okta.spring.example;
 
-import com.okta.spring.boot.oauth.OktaOAuth2CustomParam;
 import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -50,12 +53,12 @@ public class CodeFlowExampleApplication {
                     // all other requests
                     .anyRequest().authenticated()
 
-                // set logout URL
-                .and().logout().logoutSuccessUrl("/")
+                    // set logout URL
+                    .and().logout().logoutSuccessUrl("/")
 
-                // enable OAuth2/OIDC
-                .and().oauth2Client()
-                .and().oauth2Login();
+                    // enable OAuth2/OIDC
+                    .and().oauth2Client()
+                    .and().oauth2Login();
         }
 
         @Bean
@@ -77,6 +80,15 @@ public class CodeFlowExampleApplication {
         @Autowired
         private OktaOAuth2Properties oktaOAuth2Properties;
 
+        @Value("${acrValues}")
+        private String acrValues;
+
+        @Value("${enrollAmrValues}")
+        private String enrollAmrValues;
+
+        @Value("${enrollmentCallbackUri}")
+        private String enrollmentCallbackUri;
+
         @GetMapping("/")
         public String home() {
             return "home";
@@ -85,40 +97,41 @@ public class CodeFlowExampleApplication {
         @GetMapping("/profile")
         @PreAuthorize("hasAuthority('SCOPE_profile')")
         public ModelAndView userDetails(OAuth2AuthenticationToken authentication) {
-            return new ModelAndView("userProfile" , Collections.singletonMap("details", authentication.getPrincipal().getAttributes()));
+            return new ModelAndView("userProfile", Collections.singletonMap("details", authentication.getPrincipal().getAttributes()));
         }
 
         @GetMapping("/enroll")
         @PreAuthorize("hasAuthority('SCOPE_profile')")
-        public ModelAndView enroll(OAuth2AuthenticationToken authentication) throws UnsupportedEncodingException {
+        public RedirectView enroll(OAuth2AuthenticationToken authentication) throws UnsupportedEncodingException {
 
             logger.info("Enrolling Authenticator for {}", authentication.getPrincipal().getName());
 
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(oktaOAuth2Properties.getIssuer() + "/v1/authorize?");
-            stringBuffer.append(OAuth2ParameterNames.RESPONSE_TYPE + "=" + "none");
-            stringBuffer.append("&");
-            stringBuffer.append(OAuth2ParameterNames.CLIENT_ID + "=").append(oktaOAuth2Properties.getClientId());
-            stringBuffer.append("&");
-            stringBuffer.append(OktaOAuth2CustomParam.ACR_VALUES + "=" + oktaOAuth2Properties.getAcrValues());
-            stringBuffer.append("&");
-            stringBuffer.append(OktaOAuth2CustomParam.ENROLL_AMR_VALUES + "=" + URLEncoder.encode(oktaOAuth2Properties.getEnrollAmrValues(), "UTF-8"));
-            stringBuffer.append("&");
-            stringBuffer.append(OktaOAuth2CustomParam.PROMPT + "=" + "enroll_authenticator");
-            stringBuffer.append("&");
-            stringBuffer.append(OAuth2ParameterNames.STATE + "=" + "state12345"); // should not matter?
-            stringBuffer.append("&");
-            stringBuffer.append(OktaOAuth2CustomParam.MAX_AGE + "=" + "0");
-            stringBuffer.append("&");
-            stringBuffer.append(OAuth2ParameterNames.REDIRECT_URI + "=" + oktaOAuth2Properties.getEnrollmentCallbackUri());
+            String redirectUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .replacePath(enrollmentCallbackUri).build().toUriString();
 
-            logger.info("Sending Authorize request to: {}", stringBuffer);
+            String state = "state12345";
 
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(stringBuffer.toString(), String.class);
+            String uri = UriComponentsBuilder.fromUriString(oktaOAuth2Properties.getIssuer())
+                    .pathSegment("/v1/authorize")
+                    .queryParam("login_hint", (String) authentication.getPrincipal().getAttribute("email"))
+                    .queryParam(OAuth2ParameterNames.RESPONSE_TYPE, "none")
+                    .queryParam(OAuth2ParameterNames.CLIENT_ID, oktaOAuth2Properties.getClientId())
+                    .queryParam("acr_values", acrValues)
+                    .queryParam("enroll_amr_values", enrollAmrValues)
+                    .queryParam("prompt", "enroll_authenticator")
+                    .queryParam(OAuth2ParameterNames.STATE, state)
+                    .queryParam("max_age", 0)
+                    .queryParam(OAuth2ParameterNames.REDIRECT_URI, redirectUri)
+                    .build()
+                    .toUriString();
+
+            logger.info("Sending Authorize request to: {}", uri);
+
+            ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
 
             logger.info("Authorization result HTTP status code: {}", responseEntity.getStatusCodeValue());
 
-            return new ModelAndView("userProfile" , Collections.singletonMap("details", authentication.getPrincipal().getAttributes()));
+            return new RedirectView(uri);
         }
 
         @GetMapping("/callback/enroll")
