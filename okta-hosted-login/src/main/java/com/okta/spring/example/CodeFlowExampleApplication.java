@@ -25,7 +25,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.Collections;
 
 @SpringBootApplication
@@ -58,6 +58,8 @@ public class CodeFlowExampleApplication {
                     // enable OAuth2/OIDC
                     .and().oauth2Client()
                     .and().oauth2Login();
+
+            http.oauth2ResourceServer().opaqueToken();
         }
 
         @Bean
@@ -101,7 +103,7 @@ public class CodeFlowExampleApplication {
 
         @GetMapping("/enroll")
         @PreAuthorize("hasAuthority('SCOPE_profile')")
-        public RedirectView enroll(OAuth2AuthenticationToken authentication) throws UnsupportedEncodingException {
+        public RedirectView enroll(OAuth2AuthenticationToken authentication) throws MalformedURLException {
 
             logger.info("Enrolling Authenticator for {}", authentication.getPrincipal().getName());
 
@@ -110,9 +112,16 @@ public class CodeFlowExampleApplication {
 
             String state = "state12345";
 
+            String pathSegment;
+
+            if (Util.isRootOrgIssuer(oktaOAuth2Properties.getIssuer())) {
+                pathSegment = "/oauth2/v1/authorize";
+            } else {
+                pathSegment = "/v1/authorize";
+            }
+
             String uri = UriComponentsBuilder.fromUriString(oktaOAuth2Properties.getIssuer())
-                    .pathSegment("/v1/authorize")
-                    .queryParam("login_hint", (String) authentication.getPrincipal().getAttribute("email"))
+                    .pathSegment(pathSegment)
                     .queryParam(OAuth2ParameterNames.RESPONSE_TYPE, "none")
                     .queryParam(OAuth2ParameterNames.CLIENT_ID, oktaOAuth2Properties.getClientId())
                     .queryParam("acr_values", acrValues)
@@ -133,7 +142,7 @@ public class CodeFlowExampleApplication {
             return new RedirectView(uri);
         }
 
-        @GetMapping("/callback/enroll")
+        @GetMapping("${enrollmentCallbackUri}")
         public ModelAndView handleEnrollCallback(HttpServletRequest request) {
             logger.info("Enroll callback received with query string: {}", request.getQueryString());
             return new ModelAndView("home");
