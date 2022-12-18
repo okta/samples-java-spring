@@ -25,7 +25,7 @@ public class Util {
             }
         }
 
-        logger.info("The issuer URL: '{}' is an Okta root/org authorization server", issuerUri);
+        logger.debug("The issuer URL: '{}' is an Okta root/org authorization server", issuerUri);
         return true;
     }
 }
