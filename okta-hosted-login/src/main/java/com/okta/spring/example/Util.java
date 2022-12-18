@@ -20,7 +20,7 @@ public class Util {
             if (tokenizedUri.length >= 2 &&
                     "oauth2".equals(tokenizedUri[0]) &&
                     Strings.hasText(tokenizedUri[1])) {
-                logger.info("The issuer URL: '{}' is an Okta custom authorization server", issuerUri);
+                logger.debug("The issuer URL: '{}' is an Okta custom authorization server", issuerUri);
                 return false;
             }
         }
