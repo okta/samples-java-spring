@@ -1,5 +1,6 @@
 package com.okta.spring.example;
 
+import com.okta.commons.lang.Assert;
 import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.UUID;
 
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -88,6 +91,8 @@ public class CodeFlowExampleApplication {
         @Value("${enrollmentCallbackUri}")
         private String enrollmentCallbackUri;
 
+        private String state;
+
         @GetMapping("/")
         public String home() {
             return "home";
@@ -101,14 +106,16 @@ public class CodeFlowExampleApplication {
 
         @GetMapping("/enroll")
         @PreAuthorize("hasAuthority('SCOPE_profile')")
-        public RedirectView enroll(OAuth2AuthenticationToken authentication) throws MalformedURLException {
+        public RedirectView enroll(HttpSession httpSession,
+                                   OAuth2AuthenticationToken authentication) throws MalformedURLException {
 
             logger.info("Enrolling Authenticator for {}", authentication.getPrincipal().getName());
 
             String redirectUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .replacePath(enrollmentCallbackUri).build().toUriString();
 
-            String state = "state12345";
+            state = UUID.randomUUID().toString().replaceAll("-", "");
+            httpSession.setAttribute("state", state);
 
             String pathSegment;
 
@@ -137,8 +144,14 @@ public class CodeFlowExampleApplication {
         }
 
         @GetMapping("${enrollmentCallbackUri}")
-        public ModelAndView handleEnrollCallback(HttpServletRequest request) {
-            logger.info("Enroll callback received with query string: {}", request.getQueryString());
+        public ModelAndView handleEnrollCallback(HttpServletRequest request, HttpSession httpSession) {
+            logger.info("Enroll callback received with query string: {}, httpSession", request.getQueryString());
+
+            // validate received `state`
+            String callbackState = request.getParameter("state");
+            Assert.hasText(callbackState, "'state' is missing");
+            Assert.isTrue(callbackState.equals(httpSession.getAttribute("state")), "'state' validation failed");
+
             return new ModelAndView("home");
         }
     }
