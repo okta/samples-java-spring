@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,9 +30,7 @@ import java.util.Collections;
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class CodeFlowExampleApplication {
-
     private final Logger logger = LoggerFactory.getLogger(CodeFlowExampleApplication.class);
-
     public static void main(String[] args) {
         SpringApplication.run(CodeFlowExampleApplication.class, args);
     }
@@ -44,11 +41,15 @@ public class CodeFlowExampleApplication {
      */
     @Configuration
     static class WebConfig extends WebSecurityConfigurerAdapter {
+
+        @Value("${enrollmentCallbackUri}")
+        private String enrollmentCallbackUri;
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    // allow anonymous access to the root page
-                    .antMatchers("/", "/callback/**").permitAll()
+                    // allow anonymous access to the root page and callback url
+                    .antMatchers("/", enrollmentCallbackUri).permitAll()
                     // all other requests
                     .anyRequest().authenticated()
 
@@ -74,9 +75,6 @@ public class CodeFlowExampleApplication {
      */
     @Controller
     public class ExampleController {
-
-        @Autowired
-        private RestTemplate restTemplate;
 
         @Autowired
         private OktaOAuth2Properties oktaOAuth2Properties;
@@ -133,11 +131,7 @@ public class CodeFlowExampleApplication {
                     .build()
                     .toUriString();
 
-            logger.info("Sending Authorize request to: {}", uri);
-
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
-
-            logger.info("Authorization result HTTP status code: {}", responseEntity.getStatusCodeValue());
+            logger.info("Authorize request URL: {}", uri);
 
             return new RedirectView(uri);
         }
