@@ -2,12 +2,13 @@ package com.okta.spring.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,24 +25,26 @@ public class CodeFlowExampleApplication {
 
     /**
      * The default Spring logout behavior redirects a user back to {code}/login?logout{code}, so you will likely want
-     * to change that.  The easiest way to do this is by extending from {@link WebSecurityConfigurerAdapter}.
+     * to change that.
      */
     @Configuration
-    static class WebConfig extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
-                    // allow antonymous access to the root page
-                    .antMatchers("/").permitAll()
-                    // all other requests
-                    .anyRequest().authenticated()
+    static class WebConfig {
 
-                // set logout URL
-                .and().logout().logoutSuccessUrl("/")
+        @Bean
+        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-                // enable OAuth2/OIDC
-                .and().oauth2Client()
-                .and().oauth2Login();
+            http.authorizeHttpRequests((requests) -> requests
+                            .requestMatchers("/").permitAll()
+                            .anyRequest().authenticated()
+                    )
+                    .logout().logoutSuccessUrl("/")
+                    .and()
+                    .oauth2Client()
+                    .and()
+                    .oauth2Login()
+                    .and()
+                    .oauth2ResourceServer().jwt();
+            return http.build();
         }
     }
 

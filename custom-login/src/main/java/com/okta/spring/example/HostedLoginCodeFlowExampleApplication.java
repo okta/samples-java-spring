@@ -22,11 +22,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * This example renders a custom login page (hosted within this application). You can use a standard login with less
@@ -52,25 +51,24 @@ public class HostedLoginCodeFlowExampleApplication {
     }
 
     @Configuration
-    static class OAuth2SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    static class OAuth2SecurityConfigurerAdapter {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                .exceptionHandling()
-                        .accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
+        @Bean
+        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-                .and().authorizeRequests()
-                        .antMatchers(HttpMethod.GET,"/", "/custom-login", "/css/**").permitAll()
-                        .anyRequest().authenticated()
-
-                 // send the user back to the root page when they logout
-                .and()
+            http.authorizeHttpRequests((requests) -> requests
+                            .requestMatchers("/", "/custom-login", "/css/**").permitAll()
+                            .anyRequest().authenticated()
+                    )
+                    .exceptionHandling().accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
+                    .and()
                     .logout().logoutSuccessUrl("/")
+                    .and()
+                    .oauth2Client()
+                    .and()
+                    .oauth2Login().redirectionEndpoint().baseUri("/authorization-code/callback*");
 
-                .and().oauth2Client()
-                .and().oauth2Login().redirectionEndpoint()
-                    .baseUri("/authorization-code/callback*");
+            return http.build();
         }
     }
 }
