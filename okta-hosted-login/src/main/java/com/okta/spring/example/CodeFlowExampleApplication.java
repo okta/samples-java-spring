@@ -41,9 +41,8 @@ public class CodeFlowExampleApplication {
                     .and()
                     .oauth2Client()
                     .and()
-                    .oauth2Login()
-                    .and()
-                    .oauth2ResourceServer().jwt();
+                    .oauth2Login();
+
             return http.build();
         }
     }
