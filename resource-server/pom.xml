@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
+        <version>3.0.2</version>
     </parent>
 
     <groupId>com.example.okta</groupId>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.okta.spring</groupId>
             <artifactId>okta-spring-boot-starter</artifactId>
-            <version>2.1.7</version>
+            <version>3.0.2</version>
         </dependency>
 
         <!-- Other standard Spring starters -->
@@ -53,15 +53,17 @@
         <dependency>
             <groupId>com.okta.oidc.tck</groupId>
             <artifactId>okta-oidc-tck</artifactId>
-            <version>0.5.7</version>
+            <version>0.5.8</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>3.0.15</version>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>4.0.9</version>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -103,7 +105,7 @@
               <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M9</version>
                 <configuration>
                     <dependenciesToScan>
                         <dependency>com.okta.oidc.tck:okta-oidc-tck</dependency>

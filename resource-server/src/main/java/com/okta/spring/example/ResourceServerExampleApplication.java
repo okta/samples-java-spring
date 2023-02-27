@@ -3,15 +3,16 @@ package com.okta.spring.example;
 import com.okta.spring.boot.oauth.Okta;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,20 +31,23 @@ public class ResourceServerExampleApplication {
     }
 
     @Configuration
-    static class OktaOAuth2WebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    static class OktaOAuth2WebSecurityConfigurerAdapter {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
-                .anyRequest().authenticated()
-            .and()
-                .oauth2ResourceServer().jwt(); //or .opaqueToken();
+        @Bean
+        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+            http.authorizeHttpRequests((requests) -> requests
+                            .anyRequest().authenticated()
+                    )
+                    .oauth2ResourceServer().jwt(); //or .opaqueToken();
 
             // process CORS annotations
             http.cors();
 
             // force a non-empty response body for 401's to make the response more browser friendly
             Okta.configureResourceServer401ResponseBody(http);
+
+            return http.build();
         }
     }
 
