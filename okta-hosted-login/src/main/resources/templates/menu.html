@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <body id="samples">
 
@@ -21,12 +21,14 @@
       <div class="container-fluid">
         <ul class="nav navbar-nav">
             <li><a th:href="@{/}">Home</a></li>
-            <li><a id="profile-button" th:href="@{/profile}" th:if="${#authorization.expression('isAuthenticated()')}">My Profile</a></li>
+            <li sec:authorize="isAuthenticated()"> <a id="profile-button" th:href="@{/profile}">My Profile</a> </li>
         </ul>
-        <form method="post" th:action="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}" class="navbar-form navbar-right">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <button id="logout-button" type="submit" class="btn btn-danger">Logout</button>
-        </form>
+          <div sec:authorize="isAuthenticated()">
+            <form method="post" th:action="@{/logout}" class="navbar-form navbar-right">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+              <button id="logout-button" type="submit" class="btn btn-danger">Logout</button>
+            </form>
+          </div>
       </div>
     </nav>
 

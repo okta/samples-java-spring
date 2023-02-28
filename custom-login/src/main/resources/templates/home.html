@@ -13,31 +13,31 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>User Details</title>
-    <!--/*/ <th:block th:include="head :: head"/> /*/-->
+    <!--/*/ <th:block th:insert="~{head}"/> /*/-->
 </head>
   <body id="samples">
-  <div th:replace="menu :: menu"></div>
+  <div th:replace="~{menu}"></div>
 
     <div id="content" class="container">
       <h2>Custom Login + Spring Boot Example</h2>
 
-      <div th:unless="${#authorization.expression('isAuthenticated()')}">
+      <div sec:authorize="!isAuthenticated()">
         <p>Hello!</p>
         <p>If you're viewing this page then you have successfully configured and started this example server.</p>
         <p>This example shows you how to use the <a href="https://github.com/okta/okta-spring-boot">Okta Spring Boot Starter</a> to add the <a href="https://developer.okta.com/authentication-guide/implementing-authentication/auth-code.html">Authorization Code Flow</a> to your application.</p>
         <p>When you click the login button below, you will be redirected to the login page on your Okta org.  After you authenticate, you will be returned to this application.</p>
       </div>
 
-      <div th:if="${#authorization.expression('isAuthenticated()')}" class="text container">
-        <p>Welcome home, <span th:text="${#authentication.principal.attributes['name']}">Joe Coder</span>!</p>
+      <div sec:authorize="isAuthenticated()" class="text container">
+        <p>Welcome home, <span sec:authentication="name">!</p>
         <p>You have successfully authenticated against your Okta org, and have been redirected back to this application.</p>
         <p>Visit the <a th:href="@{/profile}">My Profile</a> page in this application to view the information retrieved with your OAuth Access Token.</p>
       </div>
 
-        <form method="get" th:action="@{/oauth2/authorization/okta}" th:unless="${#authorization.expression('isAuthenticated()')}">
+        <form method="get" th:action="@{/oauth2/authorization/okta}" sec:authorize="!isAuthenticated()">
           <button id="login-button" class="btn btn-primary" type="submit">Login</button>
         </form>
     </div>
