@@ -9,7 +9,7 @@ Before running this sample, you should start the resource server backend.
 **backend:**
 ```bash
 cd ../resource-server
-mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default
+mvn spring-boot:run -Dspring-boot.run.arguments="--okta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default"
 ```
 
 > **NOTE:** The above command starts the resource server on port 8000. You can browse to `http://localhost:8000` to ensure it has started. If you get the message "401 Unauthorized", it indicates that the resource server is up. You will need to pass an access token to access the resource, which will be done by the front-end below.
@@ -25,9 +25,8 @@ Now start the front-end.
 
 ```bash
 cd front-end
-mvn \
-  -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
-  -Dokta.oauth2.client-id={clientId}
+mvn spring-boot:run -Dspring-boot.run.arguments="--okta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
+    --okta.oauth2.clientId={clientId}" 
 ```
 
 Browse to: `http://localhost:8080/` to login!

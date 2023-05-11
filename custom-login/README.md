@@ -33,9 +33,9 @@ Plug these values into the `mvn` commands used to start the application.
 
 ```bash
 cd custom-login
-mvn -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
-    -Dokta.oauth2.clientId={clientId} \
-    -Dokta.oauth2.clientSecret={clientSecret}
+mvn spring-boot:run -Dspring-boot.run.arguments="--okta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
+    --okta.oauth2.clientId={clientId} \
+    --okta.oauth2.clientSecret={clientSecret}"
 ```
 
 > **NOTE:** Putting secrets on the command line should ONLY be done for examples, do NOT do this in production. Instead, we recommend you store them as environment variables. For example:
