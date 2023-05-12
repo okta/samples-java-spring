@@ -38,9 +38,9 @@ Now start the front-end.
 
 ```bash
 cd front-end
-mvn \
-  -Dokta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
-  -Dokta.oauth2.client-id={clientId}
+
+mvn spring-boot:run -Dspring-boot.run.arguments="--okta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default \
+    --okta.oauth2.clientId={clientId}" 
 ```
 
 Browse to: `http://localhost:8080/` to login!
