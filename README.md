@@ -2,6 +2,8 @@
 
 This repository contains several sample applications that show you how to integrate various Okta use-cases into your Java application that uses the Spring framework.
 
+Note: Samples would need minimum JDK 17 or above.
+
 Please find the sample that fits your use-case from the table below.
 
 | Sample | Description | Use-Case |
