@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  general-platform-helpers: okta/general-platform-helpers@1.8
+
 aliases:
 
   - &build_steps
