@@ -52,4 +52,4 @@ Browse to: `http://localhost:8080/` to login!
 [Okta Angular Sample Apps]: https://github.com/okta/samples-js-angular
 [Okta Vue Sample Apps]: https://github.com/okta/samples-js-vue
 [Okta React Sample Apps]: https://github.com/okta/samples-js-react
-[OIDC SPA Setup Instructions]: https://developer.okta.com/authentication-guide/implementing-authentication/implicit#1-setting-up-your-application
+[OIDC SPA Setup Instructions]: https://developer.okta.com/docs/guides/implement-grant-type/authcodepkce/main/#set-up-your-app
