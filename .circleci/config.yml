@@ -25,6 +25,19 @@ jobs:
     parallelism: 3
     steps: *build_steps
 
+
+  snyk-scan:
+    docker:
+      - image: cimg/openjdk:17.0.6
+    steps:
+      - checkout
+      - run: ./mvnw clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
+      - general-platform-helpers/step-run-snyk-monitor:
+          scan-all-projects: true
+          skip-unresolved: false
+          run-on-non-main: true
+          additional-arguments: "--maven-aggregate-project"
+
   reversing-labs:
     docker:
       - image: cimg/openjdk:17.0.6
@@ -80,7 +93,12 @@ workflows:
           name: "Scan with Semgrep"
           context:
             - static-analysis
-
+      - snyk-scan:
+          name: execute-snyk
+          requires:
+            - jdk17
+          context:
+            - static-analysis
   "Malware Scanner":
     jobs:
       - reversing-labs:
