@@ -86,9 +86,10 @@ workflows:
   build_and_test:
     jobs:
       - jdk17
-  # See OKTA-624747
+
   semgrep:
     jobs:
+      - jdk17
       - platform-helpers/job-semgrep-scan:
           name: "Scan with Semgrep"
           context:
@@ -99,6 +100,7 @@ workflows:
             - jdk17
           context:
             - static-analysis
+
   "Malware Scanner":
     jobs:
       - reversing-labs:
