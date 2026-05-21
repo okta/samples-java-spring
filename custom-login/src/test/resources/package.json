@@ -8,7 +8,7 @@
         "custom-login-server": "mvn -f ../../pom.xml"
     },
     "devDependencies": {
-       "axios": "^0.20.0",
+       "axios": "^1.15.0",
        "dotenv": "^5.0.1",
        "find-process": "^1.1.0",
        "forever-monitor": "^2.0.0",
