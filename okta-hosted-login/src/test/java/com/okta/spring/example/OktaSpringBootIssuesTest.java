@@ -1,7 +1,7 @@
 /*
  * Test suite covering all 17 open GitHub issues for okta-spring-boot
  * Repository: https://github.com/okta/okta-spring-boot
- * Tested against: okta-spring-boot-starter 3.0.7
+ * Tested against: okta-spring-boot-starter 3.1.0
  *
  * IMPORTANT NOTE ON TEST DESIGN
  * ─────────────────────────────
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Comprehensive test suite targeting all 17 open issues against okta-spring-boot-starter 3.0.7.
+ * Comprehensive test suite targeting all 17 open issues against okta-spring-boot-starter 3.1.0.
  * Each nested class maps to one GitHub issue.
  *
  * Context strategy: we use direct Spring Security properties to avoid OIDC discovery HTTP calls.
