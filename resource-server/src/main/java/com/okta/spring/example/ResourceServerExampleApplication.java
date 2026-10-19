@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class ResourceServerExampleApplication {
 
     public static void main(String[] args) {
@@ -39,10 +40,10 @@ public class ResourceServerExampleApplication {
             http.authorizeHttpRequests((requests) -> requests
                             .anyRequest().authenticated()
                     )
-                    .oauth2ResourceServer().jwt(); //or .opaqueToken();
+                    .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())); //or .opaqueToken(Customizer.withDefaults())
 
             // process CORS annotations
-            http.cors();
+            http.cors(Customizer.withDefaults());
 
             // force a non-empty response body for 401's to make the response more browser friendly
             Okta.configureResourceServer401ResponseBody(http);
