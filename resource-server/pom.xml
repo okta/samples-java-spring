@@ -117,7 +117,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-client</artifactId>
-            <version>6.5.1</version>
+            <version>7.1.2</version>
         </dependency>
 
         <!-- Okta's standard OAuth/OIDC tests, you do not need this in your project -->
