@@ -23,7 +23,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -32,7 +33,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * code (if you don't need to customize the login page) see the 'basic' example at the root of this repository.
  */
 @SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class HostedLoginCodeFlowExampleApplication {
 
     private final Logger logger = LoggerFactory.getLogger(HostedLoginCodeFlowExampleApplication.class);
@@ -60,13 +61,14 @@ public class HostedLoginCodeFlowExampleApplication {
                             .requestMatchers("/", "/custom-login", "/css/**").permitAll()
                             .anyRequest().authenticated()
                     )
-                    .exceptionHandling().accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
-                    .and()
-                    .logout().logoutSuccessUrl("/")
-                    .and()
-                    .oauth2Client()
-                    .and()
-                    .oauth2Login().redirectionEndpoint().baseUri("/authorization-code/callback*");
+                    .exceptionHandling((exceptions) -> exceptions
+                            .accessDeniedHandler((req, res, e) -> res.sendRedirect("/403"))
+                    )
+                    .logout((logout) -> logout.logoutSuccessUrl("/"))
+                    .oauth2Client(Customizer.withDefaults())
+                    .oauth2Login((oauth2Login) -> oauth2Login
+                            .redirectionEndpoint((redirection) -> redirection.baseUri("/authorization-code/callback*"))
+                    );
 
             return http.build();
         }
